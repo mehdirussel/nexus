@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth import login
-from .forms import NewUserForm
+from .my_forms import NewUserForm
 
 # Create your views here.
 def create_user(request):
@@ -17,7 +17,7 @@ def create_user(request):
             messages.error(request, 'Please correct the errors below.')
     else:
         form = NewUserForm()
-    context = {'form':form}  
+    context = {'form':form}
     return render(request, 'signup.html', context)
 
 

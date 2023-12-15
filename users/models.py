@@ -7,7 +7,7 @@ class NexusUser(AbstractUser):
   username = models.CharField(max_length = 50, unique = True) 
   photo_de_profil = models.ImageField(default='default.jpg', upload_to='profile_pics')
   # utiliser login par email force a email d'etre unique
-  USERNAME_FIELD = 'email'
+  #USERNAME_FIELD = 'email'
 
   def __str__(self):
     return f' |{self.username}--{self.email}|'
