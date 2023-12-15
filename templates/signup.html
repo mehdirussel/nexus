@@ -5,31 +5,18 @@
 {% endblock %}
 {% block title %}Nexus Sign up{% endblock %}
 {% block wrapper %}
-<form method="post" action="{% url 'signup-view' %}">
+<form method="post" action="{% url 'signup-view' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <h1>Sign up</h1>
 
     {{ form.non_field_errors }}
+    {% for field in form %}
     <div class="input-box">
-        {{ form.username.errors }}
-        <label hidden for="{{ form.username.id_for_label }}"></label>
-        <input type="text" name="{{ form.username.id_for_label }}" placeholder="Username" required>
-        <i class='bx bxs-user'></i>
+        {{ field.errors }}
+        {{ field.label_tag }} {{ field }}
     </div>
-
-    <div class="input-box">
-        {{ form.password.errors }}
-        <label hidden for="{{ form.password.id_for_label }}"></label>
-        <input type="password" name="{{ form.password.id_for_label }}" placeholder="Password" required>
-        <i class='bx bxs-lock-alt'></i>
-    </div>
-
-    <div class="input-box">
-        {{ form.email.errors }}
-        <label hidden for="{{ form.email.id_for_label }}"></label>
-        <input type="text" name="{{ form.email.id_for_label }}" placeholder="e-mail uha" required>
-        <i class='bx bxs-envelope'></i>
-    </div>
+    {% endfor %}
+    
     <button type="submit" class="btn">Sign up</button>
     <div class="register-link">
         <p>Already a member ? <a href="login.html">Login</a></p>
