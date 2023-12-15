@@ -1,0 +1,15 @@
+login -> login,mdp oublie
+sign  up -> creer compte
+homepage -> {
+	- creer salons
+	- invitations (par lien seulment envoyé en dm)
+	- voirr salons & messages
+	- moderation = supprimer msgs&membres + emoji
+	}
+page de compte -> modification du compte
+
+* compte = useer;email;mdp;image
+* pas verifié = tu peux rien faire
+* user to user messages allowed if you know the user's userna
+* direct message = groupe de 2
+	
