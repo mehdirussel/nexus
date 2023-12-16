@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = 'users/login'
+LOGIN_REDIRECT_URL = 'channels'
+LOGOUT_URL = 'users/logout'
 
 # Application definition
 
