@@ -25,6 +25,7 @@ jobs:
       run: |
         pip uninstall PIL
         pip uninstall Pillow
+        pip install Pillow
         pip install -r requirements.txt
     - name: Run Tests
       run: |
