@@ -7,7 +7,7 @@ class NewUserForm(UserCreationForm):
     #  eg: amontarad and aMoNTArad are considered the same
 	username = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'username'}),label='')
 	email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder':'email uha'}),label='')
-	photo_de_profil = forms.ImageField(widget=forms.FileInput(attrs={'placeholder':'image'}),label='')
+	photo_de_profil = forms.ImageField(widget=forms.FileInput(attrs={"style":"padding-top: 11px;"}),label='')
 	password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Password'}),label='')
 	password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Confirm Password'}),label='')
 	class Meta:
