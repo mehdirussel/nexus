@@ -23,7 +23,6 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
         pip uninstall PIL
         pip uninstall Pillow
         pip install -r requirements.txt
