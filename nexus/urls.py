@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/',include('users.urls')),
     path('channels/',include('channels.urls')),
-    path('verify/',include('verify.urls'))
+    path('verify/',include('verify.urls')),
+    path('',views.hello,name='nexus-hello-view'),
 ]

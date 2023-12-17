@@ -7,14 +7,15 @@ from .my_forms import NewUserForm
 from django.core.signing import TimestampSigner
 from base64 import urlsafe_b64encode
 
-def gen_email_link(email):
+def gen_email_token(email):
     timestamp_token = TimestampSigner().sign_object({"email":email})
     email_verif_token = urlsafe_b64encode(timestamp_token.encode()).decode()
     
-    return reverse('empty-verify-view') + email_verif_token
+    return email_verif_token
 
 def send_email(r,email):
-    messages.success(r,f'{gen_email_link(email)}')
+    #messages.success(r,r.build_absolute_uri(reverse("nexus-hello-view")) + gen_email_token(email))
+    return r.build_absolute_uri(reverse("empty-verify-view")) + gen_email_token(email)
 
 # Create your views here.
 def create_user(request):
@@ -26,7 +27,7 @@ def create_user(request):
             user.save()
             
             # email verification stuff
-            send_email(request,signup_form.cleaned_data.get("email"))
+            messages.success(request, send_email(request,signup_form.cleaned_data.get("email")))
 
             username = signup_form.cleaned_data.get("username")
             messages.success(request, f"Compte créé pour {username}, veuillez suivre les instructions recues par mail pour confirmer votre compte")
