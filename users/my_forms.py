@@ -13,6 +13,8 @@ class NewUserForm(UserCreationForm):
 	class Meta:
 		model = NexusUser
 		fields = ("username", "email", "password1","password2","photo_de_profil")
+	
+		
 
 
 class LoginForm(AuthenticationForm):

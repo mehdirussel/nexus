@@ -30,7 +30,7 @@ def create_user(request):
             messages.success(request, send_email(request,signup_form.cleaned_data.get("email")))
 
             username = signup_form.cleaned_data.get("username")
-            messages.success(request, f"Compte créé pour {username}, veuillez suivre les instructions recues par mail pour confirmer votre compte")
+            messages.success(request, f"Account created for {username}. Please follow the instructions received by email to confirm your account.")
             return redirect("login-view")
         else: # invalid signup_form
             messages.error(request, 'Please correct the errors below.')
@@ -51,8 +51,10 @@ def login_view(request):
                 messages.success(request, 'Logged in successfully')
                 return redirect('home-view') # redirect to channels:home-view
             else: # email pas encore vérifié
-                messages.error(request, 'need to verify account')
+                
+                messages.error(request, 'Your account is not verified! To access the app, please check your email for a verification link.')
         else: # login failed
-            messages.error(request, 'Log in Failed')
+            messages.error(request, 'Login failed! Please check your credentials and try again.')
     return render(request, 'login.html')
+
 

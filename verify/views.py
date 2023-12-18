@@ -18,9 +18,9 @@ def validate_token(request,token_to_check):
         if not user.is_active: # if user hasnt already activated his account
             user.is_active = True
             user.save()
-            messages.success(request, 'Email verififed!')
+            messages.success(request, 'Your account has been verified! You can login')
         else:
-            messages.error(request, 'Your account is already verified!!')
+            messages.error(request, 'Your account is already verified!')
         return render(request, DEST_AFTER_VALIDATION)
     except SignatureExpired: # verification link is expired
         user_with_expired_link = TimestampSigner().unsign_object(urlsafe_b64decode(token_to_check).decode(),max_age=360*24*3600) # 360 days,  big enough to always be verified
