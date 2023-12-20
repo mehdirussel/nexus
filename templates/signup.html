@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% block extra_styles %}
-<link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
-{% endblock %}
 {% block title %}Nexus Sign up{% endblock %}
 {% block wrapper %}
 <form method="post" action="{% url 'signup-view' %}" enctype="multipart/form-data">
@@ -23,10 +20,5 @@
     </div>
 </form>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var labels = document.querySelectorAll('label');
-            labels.forEach(function(label) { label.setAttribute('hidden', true); });
-            });
-    </script>
+<script src="{% static  '/js/remove_labels.js'%}"></script>
 {% endblock %}

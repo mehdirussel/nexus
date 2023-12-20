@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm,AuthenticationForm,PasswordChangeForm
 from .models import NexusUser
 
 class NewUserForm(UserCreationForm): 
@@ -15,7 +15,8 @@ class NewUserForm(UserCreationForm):
 		fields = ("username", "email", "password1","password2","photo_de_profil")
 	
 		
-
+class Password_change_form(PasswordChangeForm):
+	pass
 
 class LoginForm(AuthenticationForm):
 	pass

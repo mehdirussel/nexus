@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% block extra_styles %}
-    <link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
-{% endblock %}
 {% block title %}Nexus Login{% endblock %}
 {% block wrapper %}
     <form method="post" action="{% url 'login-view' %}">
@@ -19,7 +16,7 @@
 
         <div class="remember-forgot">
             <label><input name="remember_me" type="checkbox">Remember me</label>
-            <a href="#">Forgot password</a>
+            <a href="{% url 'reset_password'%}">Forgot password</a>
         </div>
 
         <button type="submit" class="btn">Login</button>

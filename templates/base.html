@@ -7,13 +7,28 @@
     <meta http-equiv="X-UA-Compatible" , content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-    {% block extra_styles %}
-    {% endblock %}
-
     {% block styles %}
     <link rel="stylesheet" href="{% static  '/styles/style_main.css'%}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    {% with request.resolver_match.view_name as view_name %}
+    {% if view_name == "signup-view" %}
+        <link rel="stylesheet" href="{% static  '/styles/style_signup.css'%}">
+
+    {% elif view_name == "login-view" %}
+        <link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
+
+
+    {% elif view_name == "password-reset-view" or view_name == "password-reset" %}
+        <link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
+
+    
+    {% else %}
+        <link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
+    {% endif %}
+    
+    {% endwith %}
+
     {% endblock %}
 
     <title>{% block title %} {% endblock %}</title>
@@ -23,25 +38,6 @@
     
     {% if messages %}
         
-        <style>
-            ul.messages {
-                position: fixed;
-                top: 0;
-                left: auto;
-                background: transparent;
-                color: white;
-                background: transparent;
-                border: 2px solid rgba(255, 255, 255, .2);
-                backdrop-filter: blur(20px);
-                box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-                color: white;
-                border-radius: 10px;
-                padding: 10px;
-                text-align: center;
-                z-index: 1000; /* Adjust the z-index to make sure it appears above other elements if needed */
-            }
-        </style>
-
         <ul class="messages">
             {% for message in messages %}
             <li {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
