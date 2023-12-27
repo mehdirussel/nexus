@@ -8,8 +8,14 @@ homepage -> {
 	}
 page de compte -> modification du compte
 
-* compte = useer;email;mdp;image
+* compte = user;email;mdp;image
 * pas verifié = tu peux rien faire
 * user to user messages allowed if you know the user's userna
 * direct message = groupe de 2
 	
+* every user a channel with all the other users, that are created when creating an account
+* this allows for direct messages
+* these channels cannot be removed
+* their name is '{new_user_username}_{old_user_username}'
+* we can use the name to retrieve the table
+* the frontend implementation should not allow for this table to have a shared link

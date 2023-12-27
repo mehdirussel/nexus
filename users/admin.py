@@ -3,3 +3,4 @@ from .models import NexusUser
 # Register your models here.
 
 admin.site.register(NexusUser)
+

@@ -23,5 +23,7 @@ urlpatterns = [
     path('users/',include('users.urls')),
     path('channels/',include('channels.urls')),
     path('verify/',include('verify.urls')),
+    path('api/',include('api.urls')),
+    path('invite/',include('invite.urls')),
     path('',views.hello,name='nexus-hello-view'),
 ]

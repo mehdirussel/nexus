@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Create a New Channel{% endblock %}
+{% block wrapper %}
+<form method="post" action="{% url 'new-channel' %}">
+    {% csrf_token %}
+    <h1>Create a New Channel</h1>
+
+    {{ form.non_field_errors }}
+    {% for field in form %}
+    {% if field.errors %}<div class="field_error" style="font-weight: bold;">{{ field.errors|striptags }}</div>{% endif %}
+    <div class="input-box">
+        {{ field.label_tag }} {{ field }}
+    </div>
+    {% endfor %}
+    
+    <button type="submit" class="btn">Create Channel</button>
+</form>
+
+<script src="{% static  '/js/remove_labels.js'%}"></script>
+{% endblock %}

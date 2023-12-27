@@ -5,6 +5,7 @@ from django.contrib.auth import login,authenticate
 from django.contrib.auth.views import LoginView
 from .my_forms import NewUserForm,Password_change_form 
 from .models import NexusUser
+from channels.models import Channel,perms_user_channel_rel
 from django.core.signing import TimestampSigner,BadSignature,SignatureExpired
 from base64 import urlsafe_b64encode,urlsafe_b64decode
 
@@ -24,17 +25,27 @@ def send_email(r,email):
 
 # Create your views here.
 def create_user(request):
+    if request.user.is_authenticated:
+        return redirect('home-view')
     if request.method == "POST":
         signup_form =  NewUserForm(request.POST,request.FILES)
         if signup_form.is_valid():
             user = signup_form.save()
             user.is_active = False # compte désactivé jusqu'a verification de mail
-            user.save()
             
+            
+            # create a channel between the new user and all existing users
+            existing_users = NexusUser.objects.exclude(id=user.id).exclude(is_superuser=True)
+            for existing_user in existing_users:
+                channel = Channel.objects.create(name=f"{user.username}_{existing_user.username}", creator_user=user, participants=2,is_private=1)
+                perms_user_channel_rel.objects.create(user=user, channel=channel, is_moderator=False)
+                perms_user_channel_rel.objects.create(user=existing_user, channel=channel, is_moderator=False)
+
             # email verification stuff
             messages.success(request, send_email(request,signup_form.cleaned_data.get("email")))
 
             username = signup_form.cleaned_data.get("username")
+            user.save()
             messages.success(request, f"Account created for {username}. Please follow the instructions received by email to confirm your account.")
             return redirect("login-view")
         else: # invalid signup_form
@@ -46,7 +57,11 @@ def create_user(request):
 
 
 
+
+
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home-view')
     if request.method == 'POST':
         user = authenticate(request, username=request.POST["username"],password=request.POST["password"])
         if user is not None: # email vérifié
