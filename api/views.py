@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from channels.models import Channel, Message,perms_user_channel_rel,MessageReadStatus
+from channels.views import is_user_in_channel
 from .serializers import UserChannelsSerializer,ChannelDetailSerializer, MessageSerializer
 import json
 from django.shortcuts import get_object_or_404
@@ -57,14 +58,17 @@ class MarkMessageAsReadAPIView(generics.UpdateAPIView):
 def send_msg_api(request):
     
     if request.method == 'POST': # clicked on send button
-        print("****\n",request.body,"******\n")
-        channel_id = json.loads(request.body)['channel_id']
+        request_payload = json.loads(request.body.decode("utf-8"))
+        try: 
+            channel_id = request_payload['channel_id']
+            content = request_payload['content']
+        except KeyError:
+            raise Http404("An error occured when sending the message!")
+        
         c = get_object_or_404(Channel, id=channel_id)
-
         if not is_user_in_channel(request.user,c):
             raise Http404("You dont have access to this channel or it does not exist")
         
-        content = json.loads(request.body)['channel_id']
         if not content:
             return JsonResponse({'error': 'Content is required'}, status=400)
 
@@ -94,4 +98,5 @@ def send_msg_api(request):
         return JsonResponse({'status': 'sent'}, status=200)
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
-   
+
+
