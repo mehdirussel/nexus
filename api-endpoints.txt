@@ -1,0 +1,6 @@
+api-description : url : view name !! USE VIEW NAME NOT THE URL, SEE EXAMPLE IN CHANNELS_TEMPLATE POST URL!!
+get list of channels: user-channels/ : api-hello-view
+get messages of channels: channel-messages/<channel_id>/ : channel-messages-api
+get channel details: channel-details/<id>/ : channel-details-api
+--MESSSAGE SENDING LOGIC IS ALREADY IMPLEMENETED, ONLY NEEDS FRONTEND MAKEUP--
+send message from post form : send-message/ : send-message-api
