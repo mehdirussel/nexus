@@ -9,9 +9,10 @@
     <button id="send_message_button" type="submit">Send Message</button>
 </form>
 
-{% for msg in msg_list %}
+<!-- {% for msg in msg_list %}
         <p>Message {{ forloop.counter }} from {{msg.user}}: {{ msg.content }}</p>
-{% endfor %}
+{% endfor %} -->
+    <div id="messages-container"></div>
     <!-- jquery for ajax -->
     <script src="https://code.jquery.com/jquery-3.5.1.js" 
           integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
@@ -34,12 +35,47 @@
                     'X-CSRFToken': Cookies.get('csrftoken'),
                 },
                 success: function () {
-                    alert('the pigeon is on its way');
+                    //alert('the pigeon is on its way');
                 },
             });
         });
 
     </script>    
+
+<script type="text/javascript">
+    function displayMessages(messages) {
+        if (messages.length > 0) {
+            $("#messages-container").empty();  // Clear existing messages
+            messages.forEach(function (message) {
+                var userHtml = `<img src="${message.user.photo_de_profil}" alt="${message.user.username}" style="width: 50px; height: 50px;">`;
+                var messageHtml = `<p>${userHtml} ${message.content}</p>`;
+                $("#messages-container").append(messageHtml);
+            });
+        } else {
+            $("#messages-container").html("<p>No messages available</p>");
+        }
+    }
+
+    function getMessages(channelId) {
+        $.ajax({
+            type: 'GET',
+            url: `{% url 'channel-messages-api' channel_id=channel.id %}`,
+            dataType: 'json',
+            success: function (data) {
+                displayMessages(data);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+                $("#messages-container").html("<p>Error retrieving messages</p>");
+            },
+        });
+    }
+
+    // Fetch messages every 0.5 seconds
+    setInterval(function () {
+        getMessages(window.location.href.split('/')[5]);  
+    }, 500);
+</script>
     
 
 {% endblock %}
