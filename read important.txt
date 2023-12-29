@@ -1,0 +1,23 @@
+templates files:  
+  * channels/ -> 'homepage.html' : lists channels to user
+  * channels/m/channel_id -> 'channel_template.html' : shows message of certain channel
+
+
+api-description : url : view name !! USE VIEW NAME NOT THE URL, SEE EXAMPLE IN CHANNELS_TEMPLATE POST URL!!
+
+get list of channels: user-channels/ : api-hello-view
+
+get messages of channels: channel-messages/<channel_id>/ : channel-messages-api
+
+get channel details: channel-details/<id>/ : channel-details-api
+
+--MESSSAGE SENDING LOGIC IS ALREADY IMPLEMENETED, ONLY NEEDS FRONTEND MAKEUP--
+send message from post form : send-message/ : send-message-api
+
+url for creating a new channel: channels/create/
+
+send invite to a user: invite/send/<channel_id>/<user_to_add> # user to add can be email or username
+
+* by default, all users can speak to all users, channels between every 2 users are automatically created on signup;
+* these channels are private, for styling stuff, you can use is_private variable in the channel-details-api to know if its a private messaging channel or a chatroom
+* frontend should also not allow the user to invite others to private channels, backend will refuse the request anyway, but its best to hide it from user
