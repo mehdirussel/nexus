@@ -24,7 +24,6 @@ class Message(models.Model):
     content = models.TextField()
     channel = models.ForeignKey(to=Channel, on_delete=models.CASCADE, related_name='channel_messages')
     user = models.ForeignKey(to=UserModel, on_delete=models.CASCADE, related_name='user_messages')
-    is_read = models.BooleanField(default=False)
     sent_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"Message from {self.user.username} in {self.channel.name} - {self.sent_at}"
@@ -37,3 +36,11 @@ class perms_user_channel_rel(models.Model): # relationship between user and chan
 
     def __str__(self):
         return f"{self.user} is {'' if self.is_moderator else 'not'} a mod of {self.channel.name}"
+
+class MessageReadStatus(models.Model):# relationship between user and message to know if a message is read by a user or not
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} has{'' if self.is_read else 'nt'} read the message"

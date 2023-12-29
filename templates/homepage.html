@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}List Channels{% endblock %}
+{% block wrapper %}
+    {% for channel in channel_list %}
+        <p><a href="/channels/m/{{ channel.id }}">{{ channel.name }}</a></p>
+    {% endfor %}
+    
+
+{% endblock %}
+
+        

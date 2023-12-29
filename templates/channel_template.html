@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Channel {{ channel.name }}{% endblock %}
+{% block wrapper %}
+<form action="{% url 'send-message-api' %}" method="post" id="message-send-form">
+    {% csrf_token %}
+    <label for="message-content">Message:</label>
+    <textarea id="message-content" name="content" required></textarea>
+    <button id="send_message_button" type="submit">Send Message</button>
+</form>
+
+{% for msg in msg_list %}
+        <p>Message {{ forloop.counter }} from {{msg.user}}: {{ msg.content }}</p>
+{% endfor %}
+    <!-- jquery for ajax -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js" 
+          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
+            crossorigin="anonymous"></script> 
+    <!-- js cokies library to easily retrieve the csrf token -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/send_message_ajax.js' %}"></script>    
+    
+
+{% endblock %}
+
+        

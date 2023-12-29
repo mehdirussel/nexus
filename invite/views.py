@@ -2,18 +2,17 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from channels.models import Message,Channel
+from channels.models import Message,Channel,MessageReadStatus,perms_user_channel_rel
 from django.core.signing import TimestampSigner,BadSignature,SignatureExpired
 from django.contrib import messages
 from django.urls import reverse
 from base64 import urlsafe_b64decode,urlsafe_b64encode
 from django.shortcuts import get_object_or_404
-from channels.models import perms_user_channel_rel
 from django.http import Http404
 
 
 UserModel = get_user_model()
-invitation_expiry_delay = 1#24*3600 # 1 day in seconds
+invitation_expiry_delay = 24*3600 # 1 day in seconds
 
 def is_user_in_channel(user, channel):
     try:
@@ -34,6 +33,7 @@ def validate_invite(request,invite_token):
         else: # user not rpesent
             #channel.members.add(request.user)
             channel.participants = channel.participants + 1
+            channel.save()
             perms_user_channel_rel.objects.create(user=request.user, channel=channel, is_moderator=False)
             messages.success(request, f"{request.user.username} has been added to {channel.name}.")
         
@@ -90,6 +90,19 @@ def send_invite_from_username_or_email(request, user_to_add,channel_id):
         user = request.user
     )
     m.save()
+    MessageReadStatus.objects.create( # user should read his message b4 sending it
+            user=request.user,
+            message=m,
+            is_read=True
+        )
+
+    for member in channel.members.all(): # all other userss have not yet read the message
+        if member != request.user:
+            MessageReadStatus.objects.create(
+                user=member,
+                message=m,
+                is_read=False
+        )
     return redirect('/channels/m/'+channel_id)
 
 

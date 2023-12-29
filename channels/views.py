@@ -1,24 +1,29 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from .models import Channel,Message,perms_user_channel_rel
+from .models import Channel,Message,perms_user_channel_rel,MessageReadStatus
 from django.contrib import messages
 from .forms import NewChannelForm
-from channels.models import Channel, perms_user_channel_rel
-from django.core.exceptions import ValidationError
 
 
 UserModel = get_user_model()
 
+def is_user_in_channel(user, channel):
+    try:
+        perms_user_channel_rel.objects.get(user=user, channel=channel)
+        return True
+    except perms_user_channel_rel.DoesNotExist:
+        return False
 
 # Create your views here.
 @login_required(login_url='login-view')
 def home_view(request):
-    user_channels_ids = [f"<a href='/channels/m/{c.id}'>{c.name}</a><br>" for c in request.user.channels.all()]
-
-    return HttpResponse(f"hey there, here is the homepage, youre logged in as {request.user} <br>{user_channels_ids}")
+    
+    #return HttpResponse(f"hey there, here is the homepage, youre logged in as {request.user} <br>{user_channels_ids} {s}")
+    channel_list = request.user.channels.all()
+    return render(request, 'homepage.html', {'channel_list': channel_list})
 
 @login_required(login_url='login-view')
 def show_channel(request,slug):
@@ -31,12 +36,9 @@ def show_channel(request,slug):
 
     # get and sort messages for the channel by order of sending
     mesgs = Message.objects.filter(channel=channel).order_by('sent_at')
-    s = ""
-    i=1
-    for m in mesgs:
-        s += f'message {i}: {m.content} <br>'
-        i+=1
-    return HttpResponse(f"{s}")
+
+    
+    return render(request, 'channel_template.html', {'channel': channel,"msg_list":mesgs})
 
 
 
@@ -65,3 +67,5 @@ def new_channel(request):
 
     context = {'form': channel_form}
     return render(request, 'create_channel.html', context)
+
+ 

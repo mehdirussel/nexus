@@ -19,5 +19,8 @@ from django.urls import path,include
 from . import views
 
 urlpatterns = [
-    path('',views.UserChannelsAPIView.as_view(),name='api-hello-view'),
+    path('user-channels/',views.UserChannelsAPIView.as_view(),name='api-hello-view'),
+    path('channel-messages/<channel_id>/', views.ChannelMessagesAPIView.as_view(), name='channel-messages-api'),
+    path('channel-details/<id>/', views.ChannelDetailAPIView.as_view(), name='channel-details-api'),
+    path("send-message/", views.send_msg_api, name="send-message-api"),
 ]
