@@ -2,12 +2,12 @@
 {% load static %}
 {% block title %}List Channels{% endblock %}
 {% block wrapper %}
-    <h2>Channels</h2>
+    <h1>Channels</h1>
     {% for channel in channel_list %}
         <p><a href="/channels/m/{{ channel.id }}">{{ channel.name }}</a></p>
     {% endfor %}
     <br/>
-    <h2>Gestion de compte</h2>
-    <p><a href="/users/account/{{ users.id }}">Mon compte</a>
+    <h1>Gestion de compte</h1>
+    <p><a href="/users/account/">Mon compte</a>
     <p><a href="/users/logout/">Deconnexion</a></p>
 {% endblock %}

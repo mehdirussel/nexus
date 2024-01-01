@@ -119,3 +119,6 @@ def password_reset(request,token):
         except Exception:
             messages.error(request, 'Something went wrong :(')
             return redirect('password-reset-view')
+        
+def account_view(request):
+    return render(request, 'account.html', )
