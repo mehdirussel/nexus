@@ -7,6 +7,6 @@
     <p>Identifiant : {{ request.user.username }}</p>
     <p>Email : {{ request.user.email }}</p>
     <p>Photo de profil :</p>
-    <img src='${request.user.photo_de_profil.url}' style="width: 50px; height: 50px;">
+    <img src='{{request.user.photo_de_profil.url}}' style="width: 50px; height: 50px;">
     <p><br/><a href="/users/account/modify/">Modifier le compte</a></p>
 {% endblock %}
