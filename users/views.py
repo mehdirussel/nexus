@@ -122,3 +122,6 @@ def password_reset(request,token):
         
 def account_view(request):
     return render(request, 'account.html', )
+
+def account_modify(request):
+    return render(request, 'account_modify.html', )
