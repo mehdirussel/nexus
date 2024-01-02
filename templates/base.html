@@ -8,27 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% block styles %}
-    <link rel="stylesheet" href="{% static  '/styles/style_main.css'%}">
+    <link rel="stylesheet" href="{% static  'styles/style_main.css'%}">
+    <link rel="stylesheet" href="{% static  'styles/style_login.css'%}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     
-    {% with request.resolver_match.view_name as view_name %}
-    {% if view_name == "signup-view" %}
-        <link rel="stylesheet" href="{% static  '/styles/style_signup.css'%}">
-
-    {% elif view_name == "login-view" %}
-        <link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
-
-
-    {% elif view_name == "password-reset-view" or view_name == "password-reset" %}
-        <link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
-
-    
-    {% else %}
-        <link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
-    {% endif %}
-    
-    {% endwith %}
-
     {% endblock %}
 
     <title>{% block title %} {% endblock %}</title>
