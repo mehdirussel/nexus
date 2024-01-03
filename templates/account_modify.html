@@ -4,20 +4,17 @@
 {% block wrapper %}
 <h1>Modification du compte</h1>
 <br/>
-<p>Username :</p>
-<div class="input-box">
-    <label for="id_username"></label> <input type="text" name="username" placeholder="username" value="{{request.user.username}}" autofocus required id="id_username">
-</div>
-
-<p>Email :</p>
-<div class="input-box">
-    <label for="id_email"></label> <input type="text" name="email" value="{{request.user.email}}" placeholder="email uha" required id="id_email">
-</div>
-
-<p>Photo de profil :</p>
-<div class="input-box">
-    <label for="id_photo_de_profil"></label> <input type="file" name="photo_de_profil" style="padding-top: 11px;" accept="image/*" required id="id_photo_de_profil">
-</div>
-
-<button type="submit" class="btn">Valider les modifications</button>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <label for="id_username">Username :</label><div class="input-box">
+    <input type="text" name="username" value="{{ request.user.username }}" autofocus required id="id_username"></div>
+    
+    <label for="id_email">Email :</label><div class="input-box">
+    <input type="email" name="email" value="{{ request.user.email }}" required id="id_email"></div>
+    
+    <label for="id_photo_de_profil">Photo de profil :</label><div class="input-box">
+    <input type="file" name="photo_de_profil" style="padding-top: 11px;" accept="image/*" required id="id_photo_de_profil"></div>
+    <button type="submit" class="btn">Valider les modifications</button>
+</form>
 {% endblock %}

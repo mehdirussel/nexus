@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.views import LoginView
-from .my_forms import NewUserForm,Password_change_form 
+from .my_forms import NewUserForm,Password_change_form, EditUserForm
 from .models import NexusUser
 from channels.models import Channel,perms_user_channel_rel
 from django.core.signing import TimestampSigner,BadSignature,SignatureExpired
@@ -124,4 +124,18 @@ def account_view(request):
     return render(request, 'account.html', )
 
 def account_modify(request):
-    return render(request, 'account_modify.html', )
+    try:
+        user_instance = NexusUser.objects.get(username=request.user.username)
+    except NexusUser.DoesNotExist:
+        # Gérer le cas où NexusUser n'existe pas pour cet utilisateur
+        # Peut-être créer un nouveau NexusUser ici si nécessaire
+        pass
+
+    if request.method == 'POST':
+        form = EditUserForm(request.POST, request.FILES, instance=user_instance)
+        if form.is_valid():
+            form.save()
+            return redirect(f'/users/account/')  # Redirigez l'utilisateur vers une vue de profil ou une autre page après la modification
+    else:
+        form = EditUserForm(instance=user_instance)
+    return render(request, 'account_modify.html', {'form': form})
