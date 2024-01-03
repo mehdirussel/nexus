@@ -22,7 +22,7 @@ from . import views
 urlpatterns = [
     path('signup/',views.create_user,name='signup-view'),
     path('login/',views.login_view,name='login-view'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='/users'),name='logout-view'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/users/login/'),name='logout-view'),
     path('reset_password/', auth_views.PasswordResetView.as_view(template_name = "reset_password.html"), name ='reset_password'),
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name = "password_reset_sent.html"), name ='password_reset_done'),
     path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name = "password_reset_form.html"), name ='password_reset_confirm'),

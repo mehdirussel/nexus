@@ -82,15 +82,17 @@ def login_view(request):
     if request.method == 'POST':
         user = authenticate(request, username=request.POST["username"],password=request.POST["password"])
         if user is not None: # email vérifié
-            if user.is_active:
-                login(request, user)
-                if "remember_me" not in request.POST.keys(): # remember is not checked, set the expiry to 0
-                    request.session.set_expiry(0)
-                messages.success(request, 'Logged in successfully')
-                return redirect('home-view') # redirect to channels:home-view
-            else: # email pas encore vérifié
-                
-                messages.error(request, 'Your account is not verified! To access the app, please check your email for a verification link.')
+            if user.is_disabled:
+                messages.error(request, 'Login failed! Your account is disabled.')
+            else:
+                if user.is_active:
+                    login(request, user)
+                    if "remember_me" not in request.POST.keys(): # remember is not checked, set the expiry to 0
+                        request.session.set_expiry(0)
+                    messages.success(request, 'Logged in successfully')
+                    return redirect('home-view') # redirect to channels:home-view
+                else: # email pas encore vérifié
+                    messages.error(request, 'Your account is not verified! To access the app, please check your email for a verification link.')
         else: # login failed
             messages.error(request, 'Login failed! Please check your credentials and try again.')
     return render(request, 'login.html')
@@ -120,7 +122,8 @@ def account_modify(request):
 def account_delete(request):
     if request.method == 'POST':
         # Supprimer le compte de l'utilisateur actuel
-        request.user.delete()
+        request.user.is_disabled = True # pour ne pas perdre les anciennes conversations, on ne supprime pas les users
+        request.user.save()
         # Déconnecter l'utilisateur après suppression
-        return redirect(f'/users/login/')  # Rediriger vers la page d'accueil ou une autre vue
+        return redirect(f'/users/logout/')  # Rediriger vers la page d'accueil ou une autre vue
     return render(request, 'account_delete.html')
