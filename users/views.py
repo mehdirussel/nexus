@@ -139,3 +139,11 @@ def account_modify(request):
     else:
         form = EditUserForm(instance=user_instance)
     return render(request, 'account_modify.html', {'form': form})
+
+def account_delete(request):
+    if request.method == 'POST':
+        # Supprimer le compte de l'utilisateur actuel
+        request.user.delete()
+        # Déconnecter l'utilisateur après suppression
+        return redirect(f'/users/login/')  # Rediriger vers la page d'accueil ou une autre vue
+    return render(request, 'account_delete.html')

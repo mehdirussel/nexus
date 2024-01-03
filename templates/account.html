@@ -8,6 +8,10 @@
     <p>Email : {{ request.user.email }}</p>
     <p>Photo de profil :</p>
     <img src='{{request.user.photo_de_profil.url}}' style="width: 50px; height: 50px;">
-    <p><br/><a href="/users/account/modify/">Modifier le compte</a></p>
-    <p><br/><a href="/users/account/destroy/">Supprimer le compte</a></p>
+
+
+    <div class="link"><p><a href="{% url 'account-modify' %}">Modifier le compte</a></p></div>
+    <div class="link"><p><a href="/users/account/delete/">Supprimer le compte</a></p></div>
+    <div class="link"><p><a href="/channels/">Retour</a></p></div>
+
 {% endblock %}
