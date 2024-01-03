@@ -8,7 +8,7 @@ from .models import NexusUser
 from channels.models import Channel,perms_user_channel_rel
 from django.core.signing import TimestampSigner,BadSignature,SignatureExpired
 from base64 import urlsafe_b64encode,urlsafe_b64decode
-
+from django.core.mail import send_mail
 
 password_reset_delay = 10*60 # 10 minutes (in seconds)
 
@@ -19,9 +19,26 @@ def gen_email_token(email):
     
     return email_verif_token
 
-def send_email(r,email):
-    #messages.success(r,r.build_absolute_uri(reverse("nexus-hello-view")) + gen_email_token(email))
-    return r.build_absolute_uri(reverse("empty-verify-view")) + gen_email_token(email)
+
+def send_verif_email(r,email):
+    verif_link = r.build_absolute_uri(reverse("empty-verify-view")) + gen_email_token(email)
+    email_content = f""" 
+    Email verification
+
+    To verify your email address, please click on the link below:
+
+    {verif_link}
+
+    """
+    is_sent = send_mail(
+                'Verify your email address',
+                email_content,
+                None,
+                [email],
+                fail_silently=False)
+
+    if is_sent == 0:
+        messages.error(r,'The verification email could not be sent, please contact an admin')
 
 # Create your views here.
 def create_user(request):
@@ -42,7 +59,7 @@ def create_user(request):
                 perms_user_channel_rel.objects.create(user=existing_user, channel=channel, is_moderator=False)
 
             # email verification stuff
-            messages.success(request, send_email(request,signup_form.cleaned_data.get("email")))
+            send_verif_email(request,signup_form.cleaned_data.get("email"))
 
             username = signup_form.cleaned_data.get("username")
             user.save()
@@ -79,46 +96,6 @@ def login_view(request):
     return render(request, 'login.html')
 
 
-
-def send_pwd_reset_email(r,email):
-    # this function should be silent to the user in order not to leak if email exists or not
-    return r.build_absolute_uri(reverse("password-reset-view")) + gen_email_token(email)
-
-
-
-def password_reset_form(request):
-    if request.method == 'POST':
-        form_email = request.POST["pwd_reset_email"]
-        messages.success(request,"If the provided email address links to an activated account on the platform, a password reset email has been sent.")
-        user_if_exists = NexusUser.objects.filter(email=form_email)
-        if user_if_exists:
-            if user_if_exists[0].is_active:
-                messages.success(request,send_pwd_reset_email(request,form_email))
-    return render(request, 'password_reset_form.html')
-
-
-
-def password_reset(request,token):
-    if request.method == 'POST': # clicked on the change my password button
-        pass 
-    else: # user has clicked on the email reset link
-        try: # verify if the token is valid
-            user_email_dict = TimestampSigner().unsign_object(urlsafe_b64decode(token).decode(),max_age=password_reset_delay)
-            user = NexusUser.objects.filter(email=user_email_dict["email"])[0]
-            context = {'form':Password_change_form}
-            return render(request,"password_reset.html",context = context) # return the password reset form
-        except SignatureExpired: # reset link is expired
-            messages.error(request, 'This password reset link is expired, please acquire a new one')
-            return redirect('password-reset-view') # return to forgot your password
-            
-
-        except BadSignature: # bad link
-            messages.error(request, 'This password reset link is invalid')
-            return redirect('password-reset-view')
-
-        except Exception:
-            messages.error(request, 'Something went wrong :(')
-            return redirect('password-reset-view')
         
 def account_view(request):
     return render(request, 'account.html', )
