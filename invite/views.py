@@ -9,7 +9,7 @@ from django.urls import reverse
 from base64 import urlsafe_b64decode,urlsafe_b64encode
 from django.shortcuts import get_object_or_404
 from django.http import Http404
-
+from users.models import NexusUser
 
 UserModel = get_user_model()
 invitation_expiry_delay = 24*3600 # 1 day in seconds
@@ -107,3 +107,20 @@ def send_invite_from_username_or_email(request, user_to_add,channel_id):
 
 
 
+def invite(request,channel_id):
+    channel = get_object_or_404(Channel, id=channel_id)
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+
+        # Vérifiez si l'utilisateur avec le nom d'utilisateur donné existe
+        try:
+            user = NexusUser.objects.get(username=username)
+        except NexusUser.DoesNotExist:
+            # Gérer le cas où l'utilisateur n'existe pas
+            return render(request, 'invite.html', {'channel': channel, 'error_message': 'Utilisateur non trouvé'})
+
+        # Redirigez vers le chemin 'send-invite' avec l'ID de l'utilisateur
+        return redirect(reverse('send-invite', kwargs={'channel_id': channel_id, 'user_to_add': user.id}))
+
+    return render(request, 'send_invite.html', {'channel': channel})

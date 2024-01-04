@@ -125,5 +125,5 @@ def account_delete(request):
         request.user.is_disabled = True # pour ne pas perdre les anciennes conversations, on ne supprime pas les users
         request.user.save()
         # Déconnecter l'utilisateur après suppression
-        return redirect(f'/users/logout/')  # Rediriger vers la page d'accueil ou une autre vue
+        return redirect('home-page')  # Rediriger vers la page d'accueil ou une autre vue
     return render(request, 'account_delete.html')

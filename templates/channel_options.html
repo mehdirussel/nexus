@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Channel options {{ channel.name }}{% endblock %}
+{% block wrapper %}
+<h1>Options du channel</h1><br/>
+
+<p>Nom du channel : {{channel.name}}</p>
+<br/>
+<div class="link"><p><a href="{% url 'invite' channel_id=channel.id %}">Envoyer une invitation</a></p></div>
+<div class="link"><p><a href="{% url 'modify-channel' slug=channel.id %}">Modifier le channel</a></p></div>
+<div class="link"><p><a href="{% url 'delete-channel' slug=channel.id %}">Supprimmer du channel</a></p></div>
+</br>
+<div class="link"><p><a href="{% url 'show-channel' slug=channel.id %}">Retour</a></p></div>
+{% endblock %}
+
+        

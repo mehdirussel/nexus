@@ -68,4 +68,28 @@ def new_channel(request):
     context = {'form': channel_form}
     return render(request, 'create_channel.html', context)
 
- 
+def options_channel(request,slug):
+    channel = get_object_or_404(Channel, id=slug)  
+    return render(request, 'channel_options.html',{'channel': channel})
+
+def delete_channel(request,slug):
+    channel = get_object_or_404(Channel, id=slug)
+    if request.method == 'POST':
+        # Supprimer le compte de l'utilisateur actuel
+        channel.delete()
+        # Déconnecter l'utilisateur après suppression
+        return redirect('home-view')  # Rediriger vers la page d'accueil ou une autre vue
+    return render(request, 'channel_delete.html',{'channel': channel})
+
+def modify_channel(request, slug):
+    channel = get_object_or_404(Channel, id=slug)
+
+    if request.method == 'POST':
+        form = NewChannelForm(request.POST, instance=channel)
+        if form.is_valid():
+            form.save()
+            return redirect('options-channel', slug=channel.id)  # Redirigez vers la page d'options du canal modifié
+    else:
+        form = NewChannelForm(instance=channel)
+
+    return render(request, 'channel_modify.html', {'form': form, 'channel': channel})

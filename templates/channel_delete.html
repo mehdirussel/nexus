@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Delete {{ channel.name }}{% endblock %}
+{% block wrapper %}
+<h1>Supprimer le channel</h1><br/>
+<p>Êtes-vous sûr de vouloir supprimer ce channel ?<br/>Cette action est irréversible.</p></br>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn">Confirmer la suppression du compte</button>
+</form>
+<br/><div class="link"><p><a href="{% url 'options-channel' slug=channel.id %}">Retour</a></p></div>
+{% endblock %}
