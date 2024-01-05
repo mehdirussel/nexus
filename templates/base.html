@@ -13,6 +13,9 @@
     <!-- css pour pages de login et signup -->
     <link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+        integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 
 
     {% endblock %}
@@ -21,18 +24,36 @@
 </head>
 
 <body>
-    
+
     {% if messages %}
-        
-        <ul class="messages">
-            {% for message in messages %}
-            <li {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
-            {% endfor %}
-        </ul>
+
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+        {% endfor %}
+    </ul>
     {% endif %}
     <div class="wrapper">
         {% block wrapper %} {% endblock %}
     </div>
+    <script>
+        // to improve, need to make the setinterval pause until execution is complete
+        setInterval(function () { // check every 1 second
+            setTimeout(function () { // remove messages after teimout
+
+                if ($('.messages').find('li').length > 0) {
+                    if ($('.messages').find('li').length === 1) { // last li
+                        $('.messages').remove();
+                        console.log("removed the last li element");
+                    } else {
+                        //we remove the last one only
+                        $('.messages').children('li:last').remove();
+                        console.log("removed an li element");
+                    }
+                }
+            }, 10000) // remove after 10 seconds
+        }, 1000) 
+    </script>
 
 </body>
 

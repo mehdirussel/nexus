@@ -4,13 +4,74 @@
 {% block wrapper %}
 <h1>Options du channel</h1><br/>
 
-<p>Nom du channel : {{channel.name}}</p>
-<br/>
-<div class="link"><p><a href="{% url 'invite' channel_id=channel.id %}">Envoyer une invitation</a></p></div>
+Nom du channel : {{channel.name}}
+
+{% if channel.is_private is not True %} <!-- cant invite to private channel -->
+<!-- hidden variable for js, to avoid injections caused by using template language inside script tag -->
+<input type="hidden" id="var_invite_url" name="var_invite_url" value="{% url 'send-invite' channel_id=channel.id user_to_add=None %}">
+
+<div class="link">
+    
+    <div class="input-box">
+        <label for="invite_input">invite a user:</label>
+        <input type="text" style="width: 300px;" id="invite_input" placeholder="username or email address">
+        <button type="submit" style="width:80px;" id="invite_button" class="btn" onclick="gen_invite_url()">invite</button>
+    </div>
+    
+</div>
+{% endif %}
 <div class="link"><p><a href="{% url 'modify-channel' slug=channel.id %}">Modifier le channel</a></p></div>
 <div class="link"><p><a href="{% url 'delete-channel' slug=channel.id %}">Supprimmer du channel</a></p></div>
 </br>
 <div class="link"><p><a href="{% url 'show-channel' slug=channel.id %}">Retour</a></p></div>
+
+
+<script>
+    function gen_invite_url() {
+        //timeout the button to avoid spam
+        
+        var invite_button = document.getElementById("invite_button");
+        //disable
+        invite_button.disabled = true;
+        invite_button.style.opacity = '0.5';
+        //re enable after timeout
+        setTimeout(function() {
+            invite_button.disabled = false;
+            invite_button.style.opacity = 1;     
+        }, 1500); // 1.5 seconds
+
+
+
+        var userInput = document.getElementById('invite_input').value;
+        var baseURL = document.getElementById('var_invite_url').value;
+
+        fetch(baseURL.replace('None', userInput))
+            .then(response => {
+    
+                    //afficher message recu
+                    //verifier si un ul de msgs existe deja
+                    var existingUl = document.querySelector('.messages');
+
+                    // sinon on cree un nouveau
+                    var ulElement = existingUl || document.createElement('ul');
+                    ulElement.className = 'messages';
+
+                    var liElement = document.createElement('li');
+                    liElement.className = 'alert alert-success';
+                    liElement.textContent = response.headers.get('content-type');
+
+                    ulElement.appendChild(liElement);
+                    
+                    if (!existingUl) { // si aucun message avant
+                        document.body.appendChild(ulElement);
+                    }
+                })        
+        
+            .catch(error => {
+                    console.error('Error during the request:', error);
+                });
+    }
+</script>
 {% endblock %}
 
         

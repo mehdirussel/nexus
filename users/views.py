@@ -83,7 +83,7 @@ def login_view(request):
         user = authenticate(request, username=request.POST["username"],password=request.POST["password"])
         if user is not None: # email vérifié
             if user.is_disabled:
-                messages.error(request, 'Login failed! Your account is disabled.')
+                messages.error(request, 'Login failed! Your account has been deleted.')
             else:
                 if user.is_active:
                     login(request, user)
@@ -125,5 +125,5 @@ def account_delete(request):
         request.user.is_disabled = True # pour ne pas perdre les anciennes conversations, on ne supprime pas les users
         request.user.save()
         # Déconnecter l'utilisateur après suppression
-        return redirect('home-page')  # Rediriger vers la page d'accueil ou une autre vue
+        return redirect('logout-view')  # Rediriger vers la page d'accueil ou une autre vue
     return render(request, 'account_delete.html')
