@@ -46,16 +46,24 @@ class ChannelUnreadMessagesAPIView(generics.ListAPIView):
     def get_queryset(self):
         channel_id = self.kwargs['channel_id']
         user = self.request.user
-        channel = Channel.objects.filter(id=channel_id, members=user).first()
+        channel = Channel.objects.filter(id=channel_id).first()
         if not is_user_in_channel(user,channel):
             raise Http404("You dont have access to this channel or it does not exist")
         
 
-        # Get a queryset of unread messages in the specified channel for the user
-        unread_messages = Message.objects.filter(channel__id=channel_id).exclude(
-            messagereadstatus__user=user, messagereadstatus__is_read=True
+        
+        unread_messages_in_all_channels = MessageReadStatus.objects.filter(
+            user=user,
+            is_read=False
+        )
+        
+        # filter those unread messages by channel id
+        unread_messages = Message.objects.filter(
+            messagereadstatus__in=unread_messages_in_all_channels,
+            channel__id = channel_id
         )
 
+        #print(f"{user.username} tried to get new messages: {[m.content for m in unread_messages]}")
         return unread_messages
 
 
@@ -77,6 +85,7 @@ def mark_message_read_api(request,message_id):
 
         read_status.is_read = True
         read_status.save()
+        print(f"{request.user.username} marked the message {instance.id} as read")
         return JsonResponse({'status': 'marked as read','message_id':message_id}, status=200)
 
     else:
@@ -103,7 +112,7 @@ def send_msg_api(request):
 
         # all is good, we can add the message to channel
         
-        print("message content: ",content)
+        #print("message content: ",content)
         m = Message(
             content=content,
             channel=c,
@@ -118,6 +127,7 @@ def send_msg_api(request):
                     message=m,
                     is_read=False
                 )
+            print(f"created status for {member.username}")
 
         return JsonResponse({'status': 'sent'}, status=200)
 
