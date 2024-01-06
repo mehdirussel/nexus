@@ -32,6 +32,11 @@ LOGIN_URL = 'users/login'
 LOGIN_REDIRECT_URL = 'channels'
 LOGOUT_URL = 'users/logout'
 
+
+GRAPH_MODELS = {
+  'app_labels': ["verify", "channels", "invite", "users"]
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +51,7 @@ INSTALLED_APPS = [
     'invite.apps.InviteConfig',
     'users.apps.UsersConfig',
     'rest_framework',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

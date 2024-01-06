@@ -26,7 +26,7 @@ class Message(models.Model):
     user = models.ForeignKey(to=UserModel, on_delete=models.CASCADE, related_name='user_messages')
     sent_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return f"Message from {self.user.username} in {self.channel.name} - {self.sent_at}"
+        return f"Message from {self.user.username} in {self.channel.name} : {self.content} | sent at: {self.sent_at}"
 
 class perms_user_channel_rel(models.Model): # relationship between user and channel to know the user's perms
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
