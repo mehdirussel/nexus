@@ -105,6 +105,7 @@ def account_view(request):
 def account_modify(request):
     try:
         user_instance = NexusUser.objects.get(username=request.user.username)
+        old_email = user_instance.email
     except NexusUser.DoesNotExist:
         # Gérer le cas où NexusUser n'existe pas pour cet utilisateur
         # Peut-être créer un nouveau NexusUser ici si nécessaire
@@ -113,6 +114,15 @@ def account_modify(request):
     if request.method == 'POST':
         form = EditUserForm(request.POST, request.FILES, instance=user_instance)
         if form.is_valid():
+            
+            # si a changé l email
+            if old_email != form.cleaned_data.get("email"):
+                # envoi nouveau email verification
+                send_verif_email(request,form.cleaned_data.get("email"))
+                user_instance.is_active=False # desactiver son compte jusqua activation apr mail
+                user_instance.save()
+                return redirect(f'/users/logout/')
+
             form.save()
             return redirect(f'/users/account/')  # Redirigez l'utilisateur vers une vue de profil ou une autre page après la modification
     else:
