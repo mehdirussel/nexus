@@ -19,5 +19,5 @@ url for creating a new channel: channels/create/
 send invite to a user: invite/send/<channel_id>/<user_to_add> # user to add can be email or username
 
 * by default, all users can speak to all users, channels between every 2 users are automatically created on signup;
-* these channels are private, for styling stuff, you can use is_private variable in the channel-details-api to know if its a private messaging channel or a chatroom
-* frontend should also not allow the user to invite others to private channels, backend will refuse the request anyway, but its best to hide it from user
+* these channels are private, for styling stuff, you can use is_private variable in the channel-details-api to know if its a private messaging channel or a chatroom with a lot of participants
+* (DONE)frontend should also not allow the user to invite others to private channels, backend will refuse the request anyway, but its best to hide it from user

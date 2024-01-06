@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 class UserChannelsAPIView(generics.ListAPIView):
     serializer_class = UserChannelsSerializer
     permission_classes = [permissions.IsAuthenticated]
-
+    
     def get_queryset(self):
         user = self.request.user
         return perms_user_channel_rel.objects.filter(user=user)
@@ -24,7 +24,12 @@ class ChannelMessagesAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         channel_id = self.kwargs['channel_id']
+        channel = Channel.objects.filter(id=channel_id, members=self.request.user).first()
+        if not is_user_in_channel(self.request.user,channel):
+            raise Http404("You dont have access to this channel or it does not exist")
+        
         return Message.objects.filter(channel__id=channel_id)
+
 
 class ChannelDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ChannelDetailSerializer
@@ -34,24 +39,48 @@ class ChannelDetailAPIView(generics.RetrieveAPIView):
         user = self.request.user
         return Channel.objects.filter(members=user)
 
-
-class MarkMessageAsReadAPIView(generics.UpdateAPIView):
+class ChannelUnreadMessagesAPIView(generics.ListAPIView):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
+    def get_queryset(self):
+        channel_id = self.kwargs['channel_id']
+        user = self.request.user
+        channel = Channel.objects.filter(id=channel_id, members=user).first()
+        if not is_user_in_channel(user,channel):
+            raise Http404("You dont have access to this channel or it does not exist")
+        
 
-        # verify if  user is a member of the channel
-        channel_members = instance.channel.members.all()
-        if request.user not in channel_members:
-            return Response({"detail": "You do not have permission to mark this message as read."}, status=status.HTTP_403_FORBIDDEN)
+        # Get a queryset of unread messages in the specified channel for the user
+        unread_messages = Message.objects.filter(channel__id=channel_id).exclude(
+            messagereadstatus__user=user, messagereadstatus__is_read=True
+        )
 
-        instance.is_read = True
-        instance.save()
+        return unread_messages
 
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@login_required(login_url='login-view')
+def mark_message_read_api(request,message_id):
+
+    if request.method == 'GET': # clicked on send button
+        try:
+            # check if message exists and is not read and is associated to the user
+            instance = Message.objects.get(id=message_id)
+            read_status = MessageReadStatus.objects.get(user=request.user,message=instance)
+            
+        except Message.DoesNotExist:
+            return JsonResponse({'status': 'Message not found','message_id':message_id}, status=404)
+        
+        except MessageReadStatus.DoesNotExist:
+            return JsonResponse({'status': 'Message status object not found','message_id':message_id}, status=404)
+        
+
+        read_status.is_read = True
+        read_status.save()
+        return JsonResponse({'status': 'marked as read','message_id':message_id}, status=200)
+
+    else:
+        return JsonResponse({'status': 'error, only get requests supported'}, status=405)
 
 
 @login_required(login_url='login-view')
@@ -74,6 +103,7 @@ def send_msg_api(request):
 
         # all is good, we can add the message to channel
         
+        print("message content: ",content)
         m = Message(
             content=content,
             channel=c,
@@ -81,15 +111,9 @@ def send_msg_api(request):
         )
         m.save()
 
-        MessageReadStatus.objects.create( # user has read his message b4 sending it, unless its twitter
-            user=request.user,
-            message=m,
-            is_read=True
-        )
 
-        for member in c.members.all(): # all other userss have not yet read the message
-            if member != request.user:
-                MessageReadStatus.objects.create(
+        for member in c.members.all(): # all userss have not yet read the message
+            MessageReadStatus.objects.create(
                     user=member,
                     message=m,
                     is_read=False

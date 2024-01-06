@@ -85,7 +85,11 @@ def send_invite_from_username_or_email(request, user_to_add,channel_id):
     
     
     # get the channel of direct messages between the 2 and send the message
-    channel = Channel.objects.filter(members=request.user).filter(members=user, participants=2)[0]
+    
+    channel = Channel.objects.filter(members=request.user).filter(members=user, participants=2).first()
+    if channel is None:
+        return HttpResponse(request, "a private channel between the 2 users doesnt exist for some reason! ")
+
     
     m = Message(
         content = invite_message,

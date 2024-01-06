@@ -9,9 +9,7 @@
     <button id="send_message_button" type="submit">Send Message</button>
 </form>
 
-<!-- {% for msg in msg_list %}
-        <p>Message {{ forloop.counter }} from {{msg.user}}: {{ msg.content }}</p>
-{% endfor %} -->
+
     <div id="messages-container"></div>
     <!-- jquery for ajax -->
     <script src="https://code.jquery.com/jquery-3.5.1.js" 
@@ -20,6 +18,28 @@
     <!-- js cokies library to easily retrieve the csrf token -->
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script type="text/javascript">
+        
+        /* retrieve old messages first */
+        fetch("{% url 'channel-messages-api' channel_id=channel.id %}")
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayMessages(data,false);
+            // start the ajax here cuz js is asynchronous
+            // Fetch messages every 0.5 seconds
+            setInterval(function () {
+                getNewMessages(window.location.href.split('/')[5]);  
+            }, 100);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+        
+        
         $(document).on('submit', '#message-send-form', function (e) {
             e.preventDefault();
             $.ajax({
@@ -43,26 +63,43 @@
     </script>    
 
 <script type="text/javascript">
-    function displayMessages(messages) {
+    function displayMessages(messages,is_new) {
         if (messages.length > 0) {
-            $("#messages-container").empty();  // Clear existing messages
             messages.forEach(function (message) {
+                //displaying the message
                 var userHtml = `<img src="${message.user.photo_de_profil}" alt="${message.user.username}" style="width: 50px; height: 50px;">`;
-                var messageHtml = `<p>${userHtml} ${message.content}</p>`;
+                var messageHtml = `<div class="channel_messages_class">${userHtml} ${message.content}</div>`;
                 $("#messages-container").append(messageHtml);
+
+                //marking as read if new message
+                if (is_new){
+                    mark_as_read(message.id);
+                }
             });
-        } else {
-            $("#messages-container").html("<p>No messages available</p>");
         }
     }
 
-    function getMessages(channelId) {
+    function mark_as_read(m_id){
+    // marking them as read
+    var url_to_call = "{% url 'mark-message-as-read-api' message_id=0 %}".replace('0', m_id.toString());
+                fetch(url_to_call)
+                .then(response => {
+                    if (!response.ok) {
+                    throw new Error('response was not ok');
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    console.error('There was a problem when marking the message as read:', error);
+                });
+            }
+    function getNewMessages(channelId) {
         $.ajax({
             type: 'GET',
-            url: `{% url 'channel-messages-api' channel_id=channel.id %}`,
+            url: `{% url 'channel-new-messages-api' channel_id=channel.id %}`,
             dataType: 'json',
             success: function (data) {
-                displayMessages(data);
+                displayMessages(data,true);
             },
             error: function (xhr, status, error) {
                 console.error(xhr.responseText);
@@ -71,10 +108,7 @@
         });
     }
 
-    // Fetch messages every 0.5 seconds
-    setInterval(function () {
-        getMessages(window.location.href.split('/')[5]);  
-    }, 500);
+    
 </script>
 <div class="link"><p><a href="{% url 'options-channel' slug=channel.id %}">Options</a></p></div>
 <br/>
