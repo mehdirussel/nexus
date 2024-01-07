@@ -61,7 +61,7 @@
             // Fetch messages every 0.5 seconds
             setInterval(function () {
                 getNewMessages(window.location.href.split('/')[5]);  
-            }, 1500);
+            }, 500);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
