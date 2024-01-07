@@ -14,9 +14,53 @@
     <h1>{% if channel.is_private is False %} Salon {% endif %} {{ channel.name }}</h1>
     <div class="message" id="messages-container" ></div>
 
+    <style>
+        .popover {
+          position: relative;
+          display: inline-block;
+        }
+      
+        .emoji-picker-container {
+          position: absolute;
+          bottom: 100%; /* Change top to bottom */
+          left: 0;
+          z-index: 1;
+          display: none;
+        }
+      </style>
 
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const popoverButton = document.querySelector(".popover");
+          const emojiPickerContainer = document.querySelector(".emoji-picker-container");
+      
+          popoverButton.addEventListener("click", function () {
+            // Toggle the display of the emoji picker container
+            emojiPickerContainer.style.display = emojiPickerContainer.style.display === "block" ? "none" : "block";
+          });
+      
+          // Close the emoji picker when clicking outside the popover button and emoji picker container
+          document.addEventListener("click", function (event) {
+            if (!popoverButton.contains(event.target) && !emojiPickerContainer.contains(event.target)) {
+              emojiPickerContainer.style.display = "none";
+            }
+          });
+        });
+      </script>
+
+      
     <form action="{% url 'send-message-api' %}" method="post" id="message-send-form">
         {% csrf_token %}
+        <div class="popover">
+            <button class="popover-button" type="button">
+                <svg fill ="white" xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM164.1 325.5C182 346.2 212.6 368 256 368s74-21.8 91.9-42.5c5.8-6.7 15.9-7.4 22.6-1.6s7.4 15.9 1.6 22.6C349.8 372.1 311.1 400 256 400s-93.8-27.9-116.1-53.5c-5.8-6.7-5.1-16.8 1.6-22.6s16.8-5.1 22.6 1.6zM144.4 208a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm192-32a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
+    
+              </svg>
+            </button>
+            <div class="emoji-picker-container">
+              <emoji-picker></emoji-picker>
+            </div>
+        </div>
         <textarea class = "input" id="message-content" name="content" placeholder ="message" required></textarea>
         <button id="send_message_button" type="submit">
             <div class="svg-wrapper-1">
@@ -61,7 +105,7 @@
             // Fetch messages every 0.5 seconds
             setInterval(function () {
                 getNewMessages(window.location.href.split('/')[5]);  
-            }, 500);
+            }, 1500);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -170,6 +214,8 @@
         hour: '2-digit', 
         minute: '2-digit',
         };
+
+        
 </script>
 {% endblock %}
 

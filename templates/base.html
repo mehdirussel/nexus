@@ -3,6 +3,9 @@
 <html lang="en">
 
 <head>
+    <link href="/your-path-to-fontawesome/css/fontawesome.css" rel="stylesheet">
+    <link href="/your-path-to-fontawesome/css/brands.css" rel="stylesheet">
+    <link href="/your-path-to-fontawesome/css/solid.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" , content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +16,28 @@
     <!-- css pour pages de login et signup -->
     <link rel="stylesheet" href="{% static  '/styles/style_login.css'%}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script type="module">
+        import "https://cdn.skypack.dev/emoji-picker-element";
+    
+        document.addEventListener("DOMContentLoaded", function () {
+          const emojiPicker = document.querySelector("emoji-picker");
+          const messageContent = document.getElementById("message-content");
+    
+          emojiPicker.addEventListener("emoji-click", function (event) {
+            // Insert the selected emoji into the textarea
+            const currentCursorPosition = messageContent.selectionStart;
+            const emoji = event.detail.unicode;
+            const newContent =
+              messageContent.value.substring(0, currentCursorPosition) +
+              emoji +
+              messageContent.value.substring(currentCursorPosition);
+            messageContent.value = newContent;
+    
+            // Set the cursor position after the inserted emoji
+            messageContent.setSelectionRange(currentCursorPosition + emoji.length, currentCursorPosition + emoji.length);
+          });
+        });
+      </script>
     
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
