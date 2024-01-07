@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Channel options {{ channel.name }}{% endblock %}
+{% block title %}Options du salon {{ channel.name }}{% endblock %}
 {% block wrapper %}
-<h1>Options du channel</h1><br />
+<h1>Options du salon</h1><br />
 
-Nom du channel : {{channel.name}}
+Nom du salon : {{channel.name}}
 
 {% if channel.is_private is not True %} <!-- cant invite to private channel -->
 <!-- hidden variable for js, to avoid injections caused by using template language inside script tag -->
@@ -14,22 +14,22 @@ Nom du channel : {{channel.name}}
 <div class="link">
 
     <div class="input-box">
-        <label for="invite_input">invite a user:</label>
+        <label for="invite_input">invitations</label>
         <input type="text" style="width: 300px;" id="invite_input" placeholder="username or email address">
         <button type="submit" style="width:80px;" id="invite_button" class="btn"
-            onclick="gen_invite_url()">invite</button>
+            onclick="gen_invite_url()">inviter</button>
     </div>
 
 </div>
 <div class="link">
 
     <p><a href="#">Modifier les rôles</a></p>
-    <p><a href="{% url 'modify-channel' slug=channel.id %}">Modifier le channel</a></p>
+    <p><a href="{% url 'modify-channel' slug=channel.id %}">Modifier le salon</a></p>
 </div>
 {% endif %}
 
 <div class="link">
-    <p><a href="{% url 'delete-channel' slug=channel.id %}">Supprimmer du channel</a></p>
+    <p><a href="{% url 'delete-channel' slug=channel.id %}">Supprimmer le salon</a></p>
 </div>
 </br>
 <div class="link">
@@ -49,7 +49,7 @@ Nom du channel : {{channel.name}}
         setTimeout(function () {
             invite_button.disabled = false;
             invite_button.style.opacity = 1;
-        }, 1500); // 1.5 seconds
+        }, 500); // 1.5 seconds
 
 
 
