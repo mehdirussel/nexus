@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse,JsonResponse 
+from django.http import HttpResponse,JsonResponse,Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
@@ -23,6 +23,15 @@ def home_view(request):
     
     #return HttpResponse(f"hey there, here is the homepage, youre logged in as {request.user} <br>{user_channels_ids} {s}")
     channel_list = request.user.channels.all()
+
+    # for private channels, change the name to other user username
+    for c in channel_list:
+        if c.is_private: 
+            for m in c.members.all():
+                if request.user.username != m.username: # found the other user
+                    c.name = m.username
+                    break
+
     return render(request, 'homepage.html', {'channel_list': channel_list})
 
 @login_required(login_url='login-view')
@@ -37,7 +46,13 @@ def show_channel(request,slug):
     # get and sort messages for the channel by order of sending
     mesgs = Message.objects.filter(channel=channel).order_by('sent_at')
 
-    
+    # for private channels, change the name to other user username
+    if channel.is_private: 
+            for m in channel.members.all():
+                if request.user.username != m.username: # found the other user
+                    channel.name = m.username
+                    break
+
     return render(request, 'channel_template.html', {'channel': channel,"msg_list":mesgs})
 
 
@@ -69,7 +84,9 @@ def new_channel(request):
     return render(request, 'create_channel.html', context)
 
 def options_channel(request,slug):
-    channel = get_object_or_404(Channel, id=slug)  
+    channel = get_object_or_404(Channel, id=slug)
+    if channel.is_private:
+        raise Http404("You can't change this channel")
     return render(request, 'channel_options.html',{'channel': channel})
 
 def delete_channel(request,slug):

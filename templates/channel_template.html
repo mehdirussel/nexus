@@ -12,7 +12,7 @@
 
 
     <h1>{{ channel.name }}</h1>
-    <div class="message" id="messages-container"></div>
+    <div class="message" id="messages-container" ></div>
 
 
     <form action="{% url 'send-message-api' %}" method="post" id="message-send-form">
@@ -96,10 +96,10 @@
         if (messages.length > 0) {
             messages.forEach(function (message) {
                 //displaying the message
-                var userHtml = `<img src="${message.user.photo_de_profil}" alt="${message.user.username}" style="width: 50px; height: 50px;">`;
-                var messageHtml = `<div class="channel_messages_class">${userHtml} ${message.content}</div>`;
+                var userHtml = `<div class="user_image_frame"><img src="${message.user.photo_de_profil}" alt="${message.user.username}" style="width: 50px; height: 50px;"></div>`;
+                var messageHtml = `<div class="channel_messages_class">${userHtml}  <div class="message_datetime">${new Date(message.sent_at).toLocaleString('fr-FR', options)}</div> <div class="message_text">${wrap_link_with_tag(message.content)}</div> </div>`;
                 $("#messages-container").append(messageHtml);
-                
+                $("#messages-container").scrollTop($("#messages-container")[0].scrollHeight);
                 //marking as read if new message
                 if (is_new){
                     console.log("appended a new message: "+message.id)
@@ -137,17 +137,40 @@
             },
         });
     }
+    function wrap_link_with_tag(text) {
+            return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+    }
 
+    $('body').keydown(function (event) {
+        if (event.which === 13) {
+            if ($("#message-content").val().trim() !== ""){ // to avoid spam
+                $("#send_message_button").click();
+            }
+        }
+    });
     
 </script>
 
 
 
 <section class="options">
+    {% if channel.is_private is False %}
     <div class="link"><p><a href="{% url 'options-channel' slug=channel.id %}">Options</a></p></div>
+    {% endif %}
+    
     <div class ="space"></div>
     <div class="link"><p><a href="/channels/">Retour</a></p></div>
 </section>
+<script>
+    $("#messages-container").scrollTop($("#messages-container")[0].scrollHeight);
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit',
+        };
+</script>
 {% endblock %}
 
         

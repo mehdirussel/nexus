@@ -4,7 +4,9 @@
 {% block wrapper %}
     <h1>Channels</h1>
     {% for channel in channel_list %}
-        <div class="link"><p><a href="/channels/m/{{ channel.id }}">{{ channel.name }}</a></p></div>
+        <div class="link"><p><a href="/channels/m/{{ channel.id }}">
+            {{ channel.name }}
+        </a></p></div>
     {% endfor %}
     </br>
     <div class="link"><p><a href="/channels/create/">Créer un nouveau channel</a></p></div>
