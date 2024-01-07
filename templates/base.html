@@ -30,7 +30,13 @@
             cssLink.href = "{% static  '/styles/style_channels.css'%}";
 
             document.head.appendChild(cssLink);
-    }
+        }else if (window.location.href.split('/')[3] === 'channels') {
+            const cssLink = document.createElement('link');
+            cssLink.rel = 'stylesheet';
+            cssLink.href = "{% static  '/styles/style_homepage.css'%}";
+        
+            document.head.appendChild(cssLink);
+        }
     </script>
 
     {% endblock %}

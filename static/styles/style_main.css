@@ -44,3 +44,18 @@ body {
     padding: 30px 40px;
 }
 
+#messages-container::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+  }
+
+#messages-container.scroll {
+    background-color: #fed9ff;
+    width: 600px;
+    height: 150px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: center;
+    padding: 20px;
+}
+
+
