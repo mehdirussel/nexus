@@ -63,24 +63,6 @@
     <div class="wrapper">
         {% block wrapper %} {% endblock %}
     </div>
-    <script>
-        // to improve, need to make the setinterval pause until execution is complete
-        /* setInterval(function () { // check every 1 second
-            setTimeout(function () { // remove messages after teimout
-
-                if ($('.messages').find('li').length > 0) {
-                    if ($('.messages').find('li').length === 1) { // last li
-                        $('.messages').remove();
-                        console.log("removed the last li element");
-                    } else {
-                        //we remove the last one only
-                        $('.messages').children('li:last').remove();
-                        console.log("removed an li element");
-                    }
-                }
-            }, 10000) // remove after 10 seconds
-        }, 1000)  */
-    </script>
 
 </body>
 
