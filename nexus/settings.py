@@ -156,12 +156,11 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert alert-danger alert-dismissible fade show',
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_HOST = 'smtp.yourserver.com'
-#EMAIL_USE_TLS = False
-#EMAIL_PORT = 465
-#EMAIL_USE_SSL = True
-#EMAIL_HOST_USER = 'your@djangoapp.com'
-#EMAIL_HOST_PASSWORD = 'your password'
+DEFAULT_FROM_EMAIL = 'Nexus App <nexus@nexus.ensisa>'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.brevo.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'yahiael1001@gmail.com'
+EMAIL_HOST_PASSWORD = 'Aqx37y4VMCcr9tJW'
 

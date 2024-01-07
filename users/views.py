@@ -27,7 +27,7 @@ def send_verif_email(r,email):
 
     To verify your email address, please click on the link below:
 
-    {verif_link}
+    <a href='{verif_link}'>Verify my email</a>
 
     """
     is_sent = send_mail(
@@ -35,10 +35,12 @@ def send_verif_email(r,email):
                 email_content,
                 None,
                 [email],
-                fail_silently=False)
+                fail_silently=True)
 
     if is_sent == 0:
-        messages.error(r,'The verification email could not be sent, please contact an admin')
+        messages.error(r,"L'email de vérification n'a pas pu être envoyé, veuillez contacter un admin")
+        
+    return is_sent
 
 # Create your views here.
 def create_user(request):
@@ -47,6 +49,10 @@ def create_user(request):
     if request.method == "POST":
         signup_form =  NewUserForm(request.POST,request.FILES)
         if signup_form.is_valid():
+            # email verification first, so that user is not saved if email does not get through
+            if send_verif_email(request,signup_form.cleaned_data.get("email")) == 0: # not sent
+                return render(request, 'signup.html', {'form':signup_form})
+            
             user = signup_form.save()
             user.is_active = False # compte désactivé jusqu'a verification de mail
             
@@ -58,15 +64,13 @@ def create_user(request):
                 perms_user_channel_rel.objects.create(user=user, channel=channel, is_moderator=False)
                 perms_user_channel_rel.objects.create(user=existing_user, channel=channel, is_moderator=False)
 
-            # email verification stuff
-            send_verif_email(request,signup_form.cleaned_data.get("email"))
-
+            
             username = signup_form.cleaned_data.get("username")
             user.save()
-            messages.success(request, f"Account created for {username}. Please follow the instructions received by email to confirm your account.")
+            messages.success(request, f"Compte créé pour {username}. Veuillez suivre les instructions recues dans votre boite email pour confirmer votre compte.")
             return redirect("login-view")
         else: # invalid signup_form
-            messages.error(request, 'Please correct the errors below.')
+            messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
     else:
         signup_form = NewUserForm()
     context = {'form':signup_form}
@@ -83,18 +87,18 @@ def login_view(request):
         user = authenticate(request, username=request.POST["username"],password=request.POST["password"])
         if user is not None: # email vérifié
             if user.is_disabled:
-                messages.error(request, 'Login failed! Your account has been deleted.')
+                messages.error(request, 'Connexion échouée! Ce compte a été supprimé.')
             else:
                 if user.is_active:
                     login(request, user)
                     if "remember_me" not in request.POST.keys(): # remember is not checked, set the expiry to 0
                         request.session.set_expiry(0)
-                    messages.success(request, 'Logged in successfully')
+                    messages.success(request, 'Connexion réussie')
                     return redirect('home-view') # redirect to channels:home-view
                 else: # email pas encore vérifié
-                    messages.error(request, 'Your account is not verified! To access the app, please check your email for a verification link.')
+                    messages.error(request, "Votre compte n'est pas vérifié! Pour utiliser l'application, veuillez suivre les instructions recues par email lors de votre inscription.")
         else: # login failed
-            messages.error(request, 'Login failed! Please check your credentials and try again.')
+            messages.error(request, 'Connexion échouée! Veuillez vérifier vos coordonnées.')
     return render(request, 'login.html')
 
 
@@ -118,9 +122,12 @@ def account_modify(request):
             # si a changé l email
             if old_email != form.cleaned_data.get("email"):
                 # envoi nouveau email verification
-                send_verif_email(request,form.cleaned_data.get("email"))
+                
+                if send_verif_email(request,form.cleaned_data.get("email")) == 0: # not sent
+                    return render(request, 'account_modify.html', {'form': EditUserForm(instance=user_instance)})
                 user_instance.is_active=False # desactiver son compte jusqua activation apr mail
                 user_instance.save()
+                messages.success(request,'Un nouveau email de vérification a été envoyé à votre adresse mail.')
                 return redirect(f'/users/logout/')
 
             form.save()

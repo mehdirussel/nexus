@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Channel {{ channel.name }}{% endblock %}
+{% block title %} {% if channel.is_private is False %} Salon {% endif %} {{ channel.name }} {% endblock %}
 {% block wrapper %}
 
     <style>
@@ -11,7 +11,7 @@
     </style>
 
 
-    <h1>{{ channel.name }}</h1>
+    <h1>{% if channel.is_private is False %} Salon {% endif %} {{ channel.name }}</h1>
     <div class="message" id="messages-container" ></div>
 
 
@@ -132,7 +132,7 @@
                 displayMessages(data,true);
             },
             error: function (xhr, status, error) {
-                console.error(xhr.responseText);
+                //console.error(xhr.responseText);
                 $("#messages-container").html("<div class='channel_messages_class'>Error retrieving messages</div>");
             },
         });

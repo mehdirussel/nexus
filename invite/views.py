@@ -29,18 +29,18 @@ def validate_invite(request,invite_token):
         channel_id = decoded_data["channel_id"]
         channel = get_object_or_404(Channel, id=channel_id)
         if request.user in channel.members.all(): # user already exists in channel
-            messages.error(request, f"You are already a member of {channel.name}.")
+            messages.error(request, f"Vous êtes déjà membre de {channel.name}.")
         else: # user not rpesent
             #channel.members.add(request.user)
             channel.participants = channel.participants + 1
             channel.save()
             perms_user_channel_rel.objects.create(user=request.user, channel=channel, is_moderator=False)
-            messages.success(request, f"{request.user.username} has been added to {channel.name}.")
+            messages.success(request, f"{request.user.username} a rejoint {channel.name}.")
         
     except SignatureExpired: # invitation link is expired
-        messages.error(request, 'This invitation link is expired,ask for a new one')
+        messages.error(request, "Ce lien d'invitation est expiré. veuillez demander un autre")
     except Exception:
-        messages.error(request, 'Invalid invitation link')
+        messages.error(request, "Lien d'invitation invalide")
     
     return redirect("home-view")
     #return render(request, 'homepage.html')
@@ -62,10 +62,10 @@ def send_invite_from_username_or_email(request, user_to_add,channel_id):
     c = get_object_or_404(Channel, id=channel_id)
     if c.is_private:
         #messages.error(request, "This is a private chat, it cannot be shared")
-        return HttpResponseNotFound(request,"This is a private chat, it cannot be shared")
+        return HttpResponseNotFound(request,"Vous ne pouvez pas inviter des membres aux discussions privées.")
     if not is_user_in_channel(request.user,c):
         #messages.error(request, "You dont have access to this channel or it does not exist")
-        return HttpResponseNotFound(request,"You dont have access to this channel or it does not exist")
+        return HttpResponseNotFound(request,"Vous n'avez pas accès à ce salon ou il n'existe pas.")
     
     token = gen_invite_link(channel_id)
 
@@ -76,12 +76,12 @@ def send_invite_from_username_or_email(request, user_to_add,channel_id):
             user = UserModel.objects.get(username=user_to_add)
         except UserModel.DoesNotExist: # didnt fund iser
             #messages.error(request, "This user does not exist!!!!")
-            return HttpResponseNotFound(request,"This user does not exist!!!!")
+            return HttpResponseNotFound(request,"Cet utilisateur n'existe pas.")
     
     if is_user_in_channel(user,c): # user_to_add already exists in the chnnel, no need to send an invite
-        return HttpResponseNotFound(request, "This user already exists in the channel.")
+        return HttpResponseNotFound(request, "Cet utilisateur est déjà membre du salon.")
 
-    invite_message = f"{request.user.username} has invited you to join his chatroom {c.name}: click on this link to join {request.build_absolute_uri(reverse('validate-invite', kwargs={'invite_token': token}))}"
+    invite_message = f"{request.user.username} vous a invité au salon {c.name}, veuillez clicker sur ce lien pour le rejoindre: {request.build_absolute_uri(reverse('validate-invite', kwargs={'invite_token': token}))}"
     
     
     # get the channel of direct messages between the 2 and send the message
@@ -111,7 +111,7 @@ def send_invite_from_username_or_email(request, user_to_add,channel_id):
                 is_read=False
         )
     
-    return HttpResponse(request,f"Invite sent to: {user_to_add}")
+    return HttpResponse(request,f"Invitation envoyée à {user_to_add}")
 
 
 

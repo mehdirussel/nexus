@@ -73,10 +73,10 @@ def new_channel(request):
             # Add the creator as a moderator to the channel
             perms_user_channel_rel.objects.create(user=request.user, channel=new_channel, is_moderator=True)
 
-            messages.success(request, f"Channel '{new_channel.name}' created successfully.")
+            messages.success(request, f"Le salon '{new_channel.name}' a été créé.")
             return redirect(f'/channels/m/{new_channel.id}')
         else:
-            messages.error(request, 'Please correct the errors below.')
+            messages.error(request, 'Veuillez corriger les erreurs ci-dessous.')
     else:
         channel_form = NewChannelForm()
 

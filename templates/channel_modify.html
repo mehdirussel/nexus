@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Modify {{ channel.name }}{% endblock %}
+{% block title %}Modifier le salon {{ channel.name }}{% endblock %}
 {% block wrapper %}
-<h1>Modifier le channel</h1><br/>
+<h1>Modifier le salon</h1><br/>
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     
-    <label for="channel_name">Nom du channel :</label><div class="input-box">
+    <label for="channel_name">Nom du salon :</label><div class="input-box">
     <input type="text" name="name" value="{{ channel.name }}" autofocus required id="channel_name"></div>
 
     <button type="submit" class="btn">Valider les modifications</button>

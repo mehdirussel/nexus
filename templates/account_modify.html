@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Nexus - Account modification{% endblock %}
+{% block title %}Nexus - Modifier mon compte{% endblock %}
 {% block wrapper %}
 <h1>Modification du compte</h1>
 <br/>
@@ -14,7 +14,7 @@
     <input type="email" name="email" value="{{ request.user.email }}" required id="id_email"></div>
     
     <label for="id_photo_de_profil">Photo de profil :</label><div class="input-box">
-    <input type="file" name="photo_de_profil" style="padding-top: 11px;" accept="image/*" required id="id_photo_de_profil"></div>
+    <input type="file" name="photo_de_profil" style="padding-top: 11px;" accept="image/*" id="id_photo_de_profil"></div>
 
     <button type="submit" class="btn">Valider les modifications</button>
 

@@ -18,19 +18,19 @@ def validate_token(request,token_to_check):
         if not user.is_active: # if user hasnt already activated his account
             user.is_active = True
             user.save()
-            messages.success(request, 'Your account has been verified! You can login')
+            messages.success(request, 'Votre compte a été vérifié, vous pouvez vous connecter.')
         else:
-            messages.error(request, 'Your account is already verified!')
+            messages.error(request, "Votre compte est déjà vérifié !")
         return render(request, DEST_AFTER_VALIDATION)
     except SignatureExpired: # verification link is expired
         user_with_expired_link = TimestampSigner().unsign_object(urlsafe_b64decode(token_to_check).decode(),max_age=360*24*3600) # 360 days,  big enough to always be verified
         user_expired = get_object_or_404(NexusUser,email=user_with_expired_link["email"])
         if not user_expired.is_active: # if user hasnt already activated his account, otherwise we shouldnt resend a new link
             send_verif_email(request,user_with_expired_link["email"])
-            messages.error(request, 'This verification link is expired, a new one has been sent to your email address.')
+            messages.error(request, "Ce lien de vérification a expiré, un nouveau a été envoyé à votre adresse e-mail")
         else:
-            messages.error(request, 'Your account is already verified!')
+            messages.error(request, "Votre compte est déjà vérifié !")
         return render(request, DEST_IF_FAILED)
     except Exception:
-        messages.error(request, 'Invalid email verification link')
+        messages.error(request, "Lien de vérification invalide.")
         return render(request, DEST_IF_FAILED)
