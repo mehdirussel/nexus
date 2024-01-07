@@ -5,6 +5,16 @@
 <h1>Options du salon</h1><br />
 
 Nom du salon : {{channel.name}}
+<br />
+Participants : {{ channel.participants }}
+<div class="popover_wrapper">
+    <div class="link popover_title" >▼</div>
+    <div class="popover_content">
+            {% for member in channel.members.all %}
+                <p>{{member.username}}</p>
+            {% endfor %}
+    </div>
+  </div>
 
 {% if channel.is_private is not True %} <!-- cant invite to private channel -->
 <!-- hidden variable for js, to avoid injections caused by using template language inside script tag -->

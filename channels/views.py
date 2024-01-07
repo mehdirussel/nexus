@@ -53,7 +53,7 @@ def show_channel(request,slug):
                     channel.name = m.username
                     break
 
-    return render(request, 'channel_template.html', {'channel': channel,"msg_list":mesgs})
+    return render(request, 'channel_template.html', {'channel': channel,"msg_list":mesgs,"is_mod":user_channel_rel.is_moderator})
 
 
 

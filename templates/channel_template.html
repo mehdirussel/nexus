@@ -97,12 +97,12 @@
             messages.forEach(function (message) {
                 //displaying the message
                 var userHtml = `<div class="user_image_frame"><img src="${message.user.photo_de_profil}" alt="${message.user.username}" style="width: 50px; height: 50px;"></div>`;
-                var messageHtml = `<div class="channel_messages_class">${userHtml}  <div class="message_datetime">${new Date(message.sent_at).toLocaleString('fr-FR', options)}</div> <div class="message_text">${wrap_link_with_tag(message.content)}</div> </div>`;
+                var messageHtml = `<div class="channel_messages_class">${userHtml}  <div class="message_datetime" style="display: inline-flex;">${new Date(message.sent_at).toLocaleString('fr-FR', options)} {% if is_mod is True %} <div class="delete_icon" style="margin-left: 20px;"><a href="#" style="color:white;">delete</a></div> {% endif %} </div><div class="message_text">${wrap_link_with_tag(message.content)}</div> </div>`;
                 $("#messages-container").append(messageHtml);
                 $("#messages-container").scrollTop($("#messages-container")[0].scrollHeight);
                 //marking as read if new message
                 if (is_new){
-                    console.log("appended a new message: "+message.id)
+                    //console.log("appended a new message: "+message.id)
                     mark_as_read(message.id);
                 }
             });
