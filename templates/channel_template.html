@@ -83,6 +83,7 @@
                     'X-CSRFToken': Cookies.get('csrftoken'),
                 },
                 success: function () {
+                    $("#message-content").val("")
                     //alert('the pigeon is on its way');
                 },
             });
@@ -132,13 +133,16 @@
             },
             error: function (xhr, status, error) {
                 console.error(xhr.responseText);
-                $("#messages-container").html("<p>Error retrieving messages</p>");
+                $("#messages-container").html("<div class='channel_messages_class'>Error retrieving messages</div>");
             },
         });
     }
 
     
 </script>
+
+
+
 <section class="options">
     <div class="link"><p><a href="{% url 'options-channel' slug=channel.id %}">Options</a></p></div>
     <div class ="space"></div>

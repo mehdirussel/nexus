@@ -149,11 +149,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MESSAGE_TAGS = {
-        messages.DEBUG: 'alert alert-secondary',
-        messages.INFO: 'alert alert-info',
-        messages.SUCCESS: 'alert alert-success',
-        messages.WARNING: 'alert alert-warning',
-        messages.ERROR: 'alert alert-danger',
+        messages.DEBUG: 'alert alert-secondary alert-dismissible fade show',
+        messages.INFO: 'alert alert-info alert-dismissible fade show',
+        messages.SUCCESS: 'alert alert-success alert-dismissible fade show',
+        messages.WARNING: 'alert alert-warning alert-dismissible fade show',
+        messages.ERROR: 'alert alert-danger alert-dismissible fade show',
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

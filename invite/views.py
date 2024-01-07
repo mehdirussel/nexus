@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.urls import reverse
 from base64 import urlsafe_b64decode,urlsafe_b64encode
 from django.shortcuts import get_object_or_404
-from django.http import Http404
+from django.http import Http404,HttpResponseNotFound
 from users.models import NexusUser
 
 UserModel = get_user_model()
@@ -62,10 +62,10 @@ def send_invite_from_username_or_email(request, user_to_add,channel_id):
     c = get_object_or_404(Channel, id=channel_id)
     if c.is_private:
         #messages.error(request, "This is a private chat, it cannot be shared")
-        return HttpResponse(request,"This is a private chat, it cannot be shared")
+        return HttpResponseNotFound(request,"This is a private chat, it cannot be shared")
     if not is_user_in_channel(request.user,c):
         #messages.error(request, "You dont have access to this channel or it does not exist")
-        return HttpResponse(request,"You dont have access to this channel or it does not exist")
+        return HttpResponseNotFound(request,"You dont have access to this channel or it does not exist")
     
     token = gen_invite_link(channel_id)
 
@@ -76,10 +76,10 @@ def send_invite_from_username_or_email(request, user_to_add,channel_id):
             user = UserModel.objects.get(username=user_to_add)
         except UserModel.DoesNotExist: # didnt fund iser
             #messages.error(request, "This user does not exist!!!!")
-            return HttpResponse(request,"This user does not exist!!!!")
+            return HttpResponseNotFound(request,"This user does not exist!!!!")
     
     if is_user_in_channel(user,c): # user_to_add already exists in the chnnel, no need to send an invite
-        return HttpResponse(request, "This user already exists in the channel.")
+        return HttpResponseNotFound(request, "This user already exists in the channel.")
 
     invite_message = f"{request.user.username} has invited you to join his chatroom {c.name}: click on this link to join {request.build_absolute_uri(reverse('validate-invite', kwargs={'invite_token': token}))}"
     
@@ -88,7 +88,7 @@ def send_invite_from_username_or_email(request, user_to_add,channel_id):
     
     channel = Channel.objects.filter(members=request.user).filter(members=user, participants=2).first()
     if channel is None:
-        return HttpResponse(request, "a private channel between the 2 users doesnt exist for some reason! ")
+        return HttpResponseNotFound(request, "a private channel between the 2 users doesnt exist for some reason! ")
 
     
     m = Message(
