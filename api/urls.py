@@ -25,5 +25,6 @@ urlpatterns = [
     path("send-message/", views.send_msg_api, name="send-message-api"),
     path('mark-message-as-read/<message_id>/', views.mark_message_read_api, name='mark-message-as-read-api'),
     path('channel-new-messages/<channel_id>/', views.ChannelUnreadMessagesAPIView.as_view(), name='channel-new-messages-api'),  
+    path('delete-msg/<message_id>/', views.delete_msg, name='delete-message-api'),
     
 ]

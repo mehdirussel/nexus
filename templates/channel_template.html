@@ -105,7 +105,7 @@
             // Fetch messages every 0.5 seconds
             setInterval(function () {
                 getNewMessages(window.location.href.split('/')[5]);  
-            }, 1500);
+            }, 500);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -140,8 +140,24 @@
         if (messages.length > 0) {
             messages.forEach(function (message) {
                 //displaying the message
-                var userHtml = `<div class="user_image_frame"><img src="${message.user.photo_de_profil}" alt="${message.user.username}" style="width: 50px; height: 50px;"></div>`;
-                var messageHtml = `<div class="channel_messages_class">${userHtml}  <div class="message_datetime" style="display: inline-flex;">${new Date(message.sent_at).toLocaleString('fr-FR', options)} {% if is_mod is True %} <div class="delete_icon" style="margin-left: 20px;"><a href="#" style="color:white;">delete</a></div> {% endif %} </div><div class="message_text">${wrap_link_with_tag(message.content)}</div> </div>`;
+                var userHtml = `<div class="user_image_frame"><img src="${message.user.photo_de_profil}" alt="${message.user.username}"></div>`;
+                var messageHtml = `
+                <div class="channel_messages_class">
+                    ${userHtml}  
+                    <div class="message_datetime" style="display: inline-flex;">
+                        ${new Date(message.sent_at).toLocaleString('fr-FR', options)} 
+                        {% if is_mod is True %} 
+                            <div class="delete_icon" style="margin-left: 20px;">
+                                <div onclick="send_delete_request('{% url 'delete-message-api' message_id=None %}',event);" class="delete-message-link" >
+                                    supprimer
+                                </div>
+                            </div> 
+                        {% endif %}
+                    </div>
+                    <div class="message_text">
+                        ${wrap_link_with_tag(message.content)}
+                    </div> 
+                </div>`.replace("None",message.id);
                 $("#messages-container").append(messageHtml);
                 $("#messages-container").scrollTop($("#messages-container")[0].scrollHeight);
                 //marking as read if new message
@@ -192,7 +208,21 @@
             }
         }
     });
-    
+
+    function send_delete_request(url_to_call,event){
+            $.ajax({
+                url: url_to_call,
+                type: "GET",
+                contentType: "application/json", 
+                success: function(data) {
+                    $(event.target).closest('.channel_messages_class').remove();
+                    console.log("Message deleted successfully");
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error deleting message:", textStatus, errorThrown);
+                }
+            });
+    }
 </script>
 
 

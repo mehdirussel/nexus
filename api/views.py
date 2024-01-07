@@ -7,6 +7,7 @@ import json
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse,JsonResponse,Http404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 
@@ -91,6 +92,33 @@ def mark_message_read_api(request,message_id):
     else:
         return JsonResponse({'status': 'error, only get requests supported'}, status=405)
 
+@login_required(login_url='login-view')
+def delete_msg(request,message_id):
+    if request.method == 'GET': # clicked on send button
+        try:
+            message = Message.objects.get(id=message_id)
+            channel = message.channel
+            # check if user is mod in this channel
+            if perms_user_channel_rel.objects.filter(user=request.user, channel=channel, is_moderator=True).exists():
+                # user is a mod and can delete the message
+                message.delete()
+                #messages.success(request,"message supprimé")
+                return JsonResponse({'status': 'message deleted','message_id':message_id}, status=200)
+            else: # not allowed
+                return JsonResponse({'status': 'grr,not allowed'}, status=404)
+            
+            
+        except Message.DoesNotExist:
+            return JsonResponse({'status': 'Message not found','message_id':message_id}, status=404)
+        
+        except perms_user_channel_rel.DoesNotExist:
+            return JsonResponse({'status': 'Message status object not found','message_id':message_id}, status=404)
+            
+
+            
+
+    else:
+        return JsonResponse({'status': 'error, only get requests supported'}, status=405)
 
 @login_required(login_url='login-view')
 def send_msg_api(request):

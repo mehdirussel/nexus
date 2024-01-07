@@ -148,3 +148,14 @@
       .popover_title:hover{
         cursor:alias;
       }
+
+      .delete-message-link{
+        color: white;
+        width: 80px;
+        height: 50px;
+      }
+
+      .delete-message-link:hover{
+        color: red;
+        cursor:grab;
+      }
