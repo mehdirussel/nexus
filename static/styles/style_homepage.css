@@ -1,3 +1,4 @@
+
 .btn-conteiner {
     --color-text: #E4F1FF;
     --color-background: transparent;
@@ -116,8 +117,10 @@
     padding: 20px;
 }
 
+
+
 .group-container {
-  max-height: 200px;
+  max-height: 300px;
   overflow-y: auto;
 }
 
@@ -130,4 +133,24 @@
 .group-container {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
+}
+
+
+.group-container {
+    height: 500px;
+    max-height: 600px;
+    overflow-y: auto;
+    display: inline-block;
+    width: 40%;
+}
+
+/* Hide scrollbar for non-WebKit browsers */
+.group-container::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+.group-container {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
 }
