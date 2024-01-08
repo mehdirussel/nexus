@@ -115,3 +115,19 @@
     text-align: center;
     padding: 20px;
 }
+
+.group-container {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Hide scrollbar for non-WebKit browsers */
+.group-container::-webkit-scrollbar {
+  width: 0;  /* Remove scrollbar space */
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+.group-container {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
