@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p-m%t_n%p6uz_-vvd_nnjxc9qf7wp)6300i^9$9=)tx%www=n-'
+SECRET_KEY = 't77ile9muo6^4&cfw%$$!bzb3q9xr+*y)h-xnkuxi0v_k^4=f4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -112,6 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = "users.NexusUser"
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
 
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -129,10 +131,13 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT =  BASE_DIR / 'static'
-#STATICFILES_DIRS = [
-#    BASE_DIR / 'static',
-#]
+if DEBUG:
+    STATICFILES_DIRS = [ BASE_DIR / 'static' ]
+else:
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+
 
 
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.urls import reverse
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.views import LoginView
 from .my_forms import NewUserForm,Password_change_form, EditUserForm
 from .models import NexusUser
@@ -78,6 +78,9 @@ def create_user(request):
 
 
 
+def logout_view(request):
+  logout(request)
+  return redirect("login-view")
 
 
 def login_view(request):
