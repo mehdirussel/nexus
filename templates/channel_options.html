@@ -46,18 +46,22 @@ Participants : {{ channel.participants }}
     {% csrf_token %}
     <div class="input-box">
         <label for="user_select">Sélectionner un utilisateur :</label>
-        <select name="user" id="user_select">
+        <select name="user" class="btn" id="user_select" style="width:150px;">
             {% for member in channel.members.all %}
-                <option value="{{ member.id }}">{{ member.username }}</option>
+                <option style="color:black;" value="{{ member.id }}">{{ member.username }}</option>
             {% endfor %}
         </select>
+        <br>
+        <br>
         <label for="role_input">Changer le rôle :</label>
-        <select name="role" id="role_input">
-            <option value="moderator">Modérateur</option>
-            <option value="member">Membre</option>
+        <select name="role" id="role_input" class="btn" style="width:150px;">
+            <option style="color:black;" value="moderator">Modérateur</option>
+            <option style="color:black;" value="member">Membre</option>
         </select>
         <button type="submit" style="width:90px;" id="role_button" class="btn">Modifier</button>
     </div>
+    <br>
+    <br>
 </form>
 
 {% endif %}
