@@ -24,18 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-p-m%t_n%p6uz_-vvd_nnjxc9qf7wp)6300i^9$9=)tx%www=n-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 LOGIN_URL = 'users/login'
 LOGIN_REDIRECT_URL = 'channels'
 LOGOUT_URL = 'users/logout'
 
-
-GRAPH_MODELS = {
-  'app_labels': ["verify", "channels", "invite", "users"]
-}
 
 # Application definition
 
@@ -51,7 +47,6 @@ INSTALLED_APPS = [
     'invite.apps.InviteConfig',
     'users.apps.UsersConfig',
     'rest_framework',
-    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -134,9 +129,10 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+STATIC_ROOT =  BASE_DIR / 'static'
+#STATICFILES_DIRS = [
+#    BASE_DIR / 'static',
+#]
 
 
 

@@ -1,5 +1,4 @@
 Pillow
 Django
 djangorestframework
-django-extensions
 
