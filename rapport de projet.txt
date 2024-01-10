@@ -15,3 +15,5 @@ Il y a 3 roles :
 - Créateur : Le créateur du salon a également la possibilité de supprimer le salon. Il est aussi modérateur par défaut.
   Le role de créateur est fixe : il n'y en a forcément qu'un et il n'est pas possible de le donner à quelqu'un.
   Ce role est cumulable avec les autres.
+
+Les invitations sont envoyées sur le salon privé entre l'utilisateur ayant envoyé l'invitation et celui qui la reçoit.
