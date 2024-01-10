@@ -1,0 +1,17 @@
+On a décidé de demander à l'utilisateur de nous donner sa photo de profil dès la création du compte 
+pour ne pas avoir à créer une photo de profil par défaut.
+De plus, on vérifie l'email dès la création du compte pour éviter tout problème.
+Il est également possible de demander un changement de mot de passe depuis la connexion du compte.
+Toutes les autres données du compte sont disponibles sur la page du compte.
+Il y est également possible de modifier ses données.
+
+On a séparé les salons en 2 types : 
+- Privé pour les salons de discussion entre deux utilisateurs. Ces salons n'ont pas accès au menu options qui serait inutile ici.
+- Public pour les autres. Les salons publics sont faits par un utilisateur à qui il est donné le role de créateur.
+
+Il y a 3 roles :
+- Membre : Les membres ne peuvent qu'inviter d'autres utilisateurs. Il s'agit du role par défaut.
+- Modérateur : Les modérateurs peuvent rennomer le salon et changer les roles, en plus de faire ce que les membres peuvent.
+- Créateur : Le créateur du salon a également la possibilité de supprimer le salon. Il est aussi modérateur par défaut.
+  Le role de créateur est fixe : il n'y en a forcément qu'un et il n'est pas possible de le donner à quelqu'un.
+  Ce role est cumulable avec les autres.
