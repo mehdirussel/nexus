@@ -11,10 +11,10 @@
     left: auto;
     background: transparent;
     color: white;
-    border: 2px solid rgba(255, 255, 255, .2);
+    /* border: 2px solid rgba(255, 255, 255, .2);
     backdrop-filter: blur(20px);
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    border-radius: 10px;
+    border-radius: 10px; */
     padding: 10px;
     text-align: center;
     z-index: 1000; /* Adjust the z-index to make sure it appears above other elements if needed */
@@ -34,7 +34,7 @@ body {
 }
 
 .wrapper {
-    width: 600px;
+    width: 800px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .2);
     backdrop-filter: blur(20px);

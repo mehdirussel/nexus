@@ -9,7 +9,29 @@
             background: rgba(39, 0, 93, 0.5);
         }
     </style>
-
+    <script type="module">
+        import "https://cdn.skypack.dev/emoji-picker-element";
+    
+        document.addEventListener("DOMContentLoaded", function () {
+          const emojiPicker = document.querySelector("emoji-picker");
+          const messageContent = document.getElementById("message-content");
+    
+          emojiPicker.addEventListener("emoji-click", function (event) {
+            // Insert the selected emoji into the textarea
+            const currentCursorPosition = messageContent.selectionStart;
+            const emoji = event.detail.unicode;
+            const newContent =
+              messageContent.value.substring(0, currentCursorPosition) +
+              emoji +
+              messageContent.value.substring(currentCursorPosition);
+            messageContent.value = newContent;
+    
+            // Set the cursor position after the inserted emoji
+            messageContent.setSelectionRange(currentCursorPosition + emoji.length, currentCursorPosition + emoji.length);
+          });
+        });
+      </script>
+    
 
     <h1>{% if channel.is_private is False %} Salon {% endif %} {{ channel.name }}</h1>
     <div class="message" id="messages-container" ></div>
@@ -144,7 +166,7 @@
                 var messageHtml = `
                 <div class="channel_messages_class">
                     ${userHtml}  
-                    <div class="message_datetime" style="display: inline-flex;">
+                    <div class="message_datetime" style="display: inline-flex;max-height: 4px;">
                         ${new Date(message.sent_at).toLocaleString('fr-FR', options)} 
                         {% if is_mod is True %} 
                             <div class="delete_icon" style="margin-left: 20px;">

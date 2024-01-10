@@ -41,7 +41,7 @@ def show_channel(request,slug):
     # Check if the user has access to the channel
     user_channel_rel = perms_user_channel_rel.objects.filter(user=request.user, channel=channel).first()
     if not user_channel_rel:
-        return HttpResponseForbidden("You do not have access to this channel.")
+        raise Http404("You do not have access to this channel.")
 
     # get and sort messages for the channel by order of sending
     mesgs = Message.objects.filter(channel=channel).order_by('sent_at')
@@ -87,28 +87,49 @@ def new_channel(request):
     context = {'form': channel_form}
     return render(request, 'create_channel.html', context)
 
+@login_required(login_url='login-view')
 def options_channel(request,slug):
+    
     channel = get_object_or_404(Channel, id=slug)
-    user_channel_relations = channel.perms_user_channel_rel_set.filter(is_moderator=True)  # Filtrer les relations pour les modérateurs
-    is_moderator = user_channel_relations.exists()  
+    if not is_user_in_channel(request.user,channel):
+        raise Http404("You dont have access to this channel or it does not exist")
+    user_channel_relations = perms_user_channel_rel.objects.filter(user=request.user, channel=channel, is_moderator=True)  # Filtrer les relations pour les modérateurs
+    is_moderator = user_channel_relations.exists()
     is_creator = (channel.creator_user == request.user)
+    #print(f"{request.user.username} is  a mod:  {is_moderator}")
+    #print(f"{request.user.username} is  a creator:{is_creator} ")
     if channel.is_private:
         raise Http404("You can't change this channel")
     return render(request, 'channel_options.html',{'channel': channel, 'is_moderator': is_moderator, 'is_creator': is_creator})
 
+
+@login_required(login_url='login-view')
 def delete_channel(request,slug):
     channel = get_object_or_404(Channel, id=slug)
+    if not is_user_in_channel(request.user,channel):
+        raise Http404("You dont have access to this channel or it does not exist")
+
     if request.method == 'POST':
-        # Supprimer le compte de l'utilisateur actuel
-        channel.delete()
-        # Déconnecter l'utilisateur après suppression
-        return redirect('home-view')  # Rediriger vers la page d'accueil ou une autre vue
+        # Supprimer le salon
+        if (channel.creator_user == request.user): # est createur
+            channel.delete()
+            # Déconnecter l'utilisateur après suppression
+            return redirect('home-view')  # Rediriger vers la page d'accueil ou une autre vue
+        else:
+            raise Http404("You cant do that!!")
     return render(request, 'channel_delete.html',{'channel': channel})
 
+
+
+@login_required(login_url='login-view')
 def modify_channel(request, slug):
     channel = get_object_or_404(Channel, id=slug)
-    
+    if not is_user_in_channel(request.user,channel):
+        raise Http404("You dont have access to this channel or it does not exist")
 
+    if not perms_user_channel_rel.objects.filter(user=request.user, channel=channel, is_moderator=True).exists(): # n est pas mod
+        raise Http404("You dont have access to this channel or it does not exist")
+    
     if request.method == 'POST':
         form = NewChannelForm(request.POST, instance=channel)
         if form.is_valid():
@@ -123,10 +144,12 @@ def modify_channel(request, slug):
 def change_user_role(request, channel_id):
     channel = get_object_or_404(Channel, id=channel_id)
 
+    if not is_user_in_channel(request.user,channel):
+        raise Http404("You dont have access to this channel or it does not exist")
     # Vérifier si l'utilisateur actuel a le droit de modifier les rôles
     user_channel_rel = perms_user_channel_rel.objects.filter(user=request.user, channel=channel).first()
-#    if not user_channel_rel or not user_channel_rel.is_moderator:
-#        return HttpResponseForbidden("Vous n'êtes pas autorisé à modifier les rôles dans ce canal.")
+    if not user_channel_rel or not user_channel_rel.is_moderator:
+        raise Http404("Vous n'êtes pas autorisé à modifier les rôles dans ce canal.")
 
     if request.method == 'POST':
         user_id = request.POST.get('user')
@@ -136,6 +159,10 @@ def change_user_role(request, channel_id):
         user_rel = perms_user_channel_rel.objects.filter(user=user, channel=channel).first()
 
         if user_rel:
+            if channel.creator_user == user:
+                messages.error(request, f"Erreur, {user.username} est le propriétaire du serveur.")
+                return redirect('options-channel', slug=channel.id)
+
             # Modifier le rôle de l'utilisateur
             if role == 'moderator':
                 user_rel.is_moderator = True
@@ -148,7 +175,7 @@ def change_user_role(request, channel_id):
                 messages.success(request, f"{user.username} est maintenant un modérateur.")
             else: 
                 messages.success(request, f"{user.username} est maintenant un membre.")
-
+            return redirect('options-channel', slug=channel.id)
             
         else:
             messages.error(request, "Impossible de trouver la relation utilisateur-canal.")

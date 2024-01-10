@@ -4,7 +4,14 @@
 {% block wrapper %}
 <h1>Options du salon</h1><br />
 
-Nom du salon : {{channel.name}}
+
+Nom du salon : {{channel.name}}         
+{% if is_moderator %}
+<div class="link" style="display: inline;">
+    <a href="{% url 'modify-channel' slug=channel.id %}"><button class="btn" style="width: 90px;">Modifier</button></a>
+</div>
+{% endif %}
+
 <br />
 Participants : {{ channel.participants }}
 <div class="popover_wrapper">
@@ -49,12 +56,10 @@ Participants : {{ channel.participants }}
             <option value="moderator">Modérateur</option>
             <option value="member">Membre</option>
         </select>
-        <button type="submit" style="width:80px;" id="role_button" class="btn">Modifier</button>
+        <button type="submit" style="width:90px;" id="role_button" class="btn">Modifier</button>
     </div>
 </form>
-        <div class="link">
-            <p><a href="{% url 'modify-channel' slug=channel.id %}">Modifier le salon</a></p>
-        </div>
+
 {% endif %}
 {% if is_creator %}
         <div class="link">
