@@ -34,6 +34,10 @@ class perms_user_channel_rel(models.Model): # relationship between user and chan
     # permissions here
     is_moderator = models.BooleanField(default=False)
 
+    def set_moderator(self, status=True):
+        self.is_moderator = status
+        self.save()
+    
     def __str__(self):
         return f"{self.user} is {'' if self.is_moderator else 'not'} a mod of {self.channel.name}"
 

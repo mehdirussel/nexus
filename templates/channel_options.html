@@ -24,23 +24,44 @@ Participants : {{ channel.participants }}
 <div class="link">
 
     <div class="input-box">
-        <label for="invite_input">invitations</label>
+        <label for="invite_input">Invitations :</label>
         <input type="text" style="width: 300px;" id="invite_input" placeholder="username or email address">
         <button type="submit" style="width:80px;" id="invite_button" class="btn"
-            onclick="gen_invite_url()">inviter</button>
+            onclick="gen_invite_url()">Inviter</button>
     </div>
 
 </div>
-<div class="link">
 
-    <p><a href="#">Modifier les rôles</a></p>
-    <p><a href="{% url 'modify-channel' slug=channel.id %}">Modifier le salon</a></p>
-</div>
+
+
+{% if is_moderator %}
+<form method="POST" action="{% url 'change-user-role' channel_id=channel.id %}">
+    {% csrf_token %}
+    <div class="input-box">
+        <label for="user_select">Sélectionner un utilisateur :</label>
+        <select name="user" id="user_select">
+            {% for member in channel.members.all %}
+                <option value="{{ member.id }}">{{ member.username }}</option>
+            {% endfor %}
+        </select>
+        <label for="role_input">Changer le rôle :</label>
+        <select name="role" id="role_input">
+            <option value="moderator">Modérateur</option>
+            <option value="member">Membre</option>
+        </select>
+        <button type="submit" style="width:80px;" id="role_button" class="btn">Modifier</button>
+    </div>
+</form>
+        <div class="link">
+            <p><a href="{% url 'modify-channel' slug=channel.id %}">Modifier le salon</a></p>
+        </div>
 {% endif %}
-
-<div class="link">
-    <p><a href="{% url 'delete-channel' slug=channel.id %}">Supprimmer le salon</a></p>
-</div>
+{% if is_creator %}
+        <div class="link">
+            <p><a href="{% url 'delete-channel' slug=channel.id %}">Supprimer le salon</a></p>
+        </div>
+{% endif %}
+{% endif %}
 </br>
 <div class="link">
     <p><a href="{% url 'show-channel' slug=channel.id %}">Retour</a></p>
