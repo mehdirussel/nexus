@@ -1,5 +1,7 @@
 Rapport sur le Projet Web de l'Application de Chat: Nexus
 
+Lien: https://nexus-app.alwaysdata.net/
+
 Introduction
 
 Notre projet consiste en une application de chat en ligne qui offre des fonctionnalités avancées pour les utilisateurs, notamment la création de salons publics et privés, la gestion des rôles, la modification du profil, le processus d'authentification, l'utilisation d'emoji, les invitations, et une vérification d'email via SMTP.
