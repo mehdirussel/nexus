@@ -7,7 +7,14 @@
 <style>
     .wrapper {
         width: 40%;
+        overflow-y: scroll;
+        max-height: 1000px;
+
     }
+
+    .wrapper::-webkit-scrollbar {
+        width: 0;  /* Remove scrollbar space */
+      }
 
     .group-container-display {
         margin-left: 10%;
