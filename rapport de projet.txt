@@ -4,7 +4,7 @@ Lien: https://nexus-app.alwaysdata.net/
 
 Introduction
 
-Notre projet consiste en une application de chat en ligne qui offre des fonctionnalités avancées pour les utilisateurs, notamment la création de salons publics et privés, la gestion des rôles, la modification du profil, le processus d'authentification, l'utilisation d'emoji, les invitations, et une vérification d'email via SMTP.
+Notre projet consiste en une application de chat en ligne qui offre des fonctionnalités avancées pour les utilisateurs, notamment la création de salons publics, la gestion des rôles, la modification du profil, le processus d'authentification, l'utilisation d'emoji, les invitations, et une vérification d'email via SMTP.
 
 Fonctionnalités Principales
 
@@ -35,8 +35,7 @@ Fonctionnalités Principales
    - Les Créateurs ont tous les privilèges des modérateurs et peuvent supprimer le salon. Il n'y a qu'un créateur, et ce rôle est fixe.
 
 7. Invitations :
-   - Les invitations sont envoyées dans le salon public.
-   - Facilite la création de conversations privées.
+   - Les invitations sont envoyées sous forme de message privé contenant un lien.
 
 8. Emoji :
    - Les utilisateurs peuvent utiliser des emoji pour enrichir leurs conversations.
