@@ -1,19 +1,48 @@
-On a décidé de demander à l'utilisateur de nous donner sa photo de profil dès la création du compte 
-pour ne pas avoir à créer une photo de profil par défaut.
-De plus, on vérifie l'email dès la création du compte pour éviter tout problème.
-Il est également possible de demander un changement de mot de passe depuis la connexion du compte.
-Toutes les autres données du compte sont disponibles sur la page du compte.
-Il y est également possible de modifier ses données.
+Rapport sur le Projet Web de l'Application de Chat
 
-On a séparé les salons en 2 types : 
-- Privé pour les salons de discussion entre deux utilisateurs. Ces salons n'ont pas accès au menu options qui serait inutile ici.
-- Public pour les autres. Les salons publics sont faits par un utilisateur à qui il est donné le role de créateur.
+Introduction
 
-Il y a 3 roles :
-- Membre : Les membres ne peuvent qu'inviter d'autres utilisateurs. Il s'agit du role par défaut.
-- Modérateur : Les modérateurs peuvent rennomer le salon et changer les roles, en plus de faire ce que les membres peuvent.
-- Créateur : Le créateur du salon a également la possibilité de supprimer le salon. Il est aussi modérateur par défaut.
-  Le role de créateur est fixe : il n'y en a forcément qu'un et il n'est pas possible de le donner à quelqu'un.
-  Ce role est cumulable avec les autres.
+Notre projet consiste en une application de chat en ligne qui offre des fonctionnalités avancées pour les utilisateurs, notamment la création de salons publics et privés, la gestion des rôles, la modification du profil, le processus d'authentification, l'utilisation d'emoji, les invitations, et une vérification d'email via SMTP.
 
-Les invitations sont envoyées sur le salon privé entre l'utilisateur ayant envoyé l'invitation et celui qui la reçoit.
+Fonctionnalités Principales
+
+1. Création de Compte (Sign Up) :
+   - Les utilisateurs sont tenus de fournir une photo de profil lors de la création du compte, éliminant ainsi le besoin de générer une image par défaut.
+   - La vérification de l'email est effectuée lors de la création du compte pour assurer la validité des adresses email et prévenir les problèmes.
+
+2. Authentification (Login) :
+   - Les utilisateurs peuvent se connecter en utilisant leurs identifiants.
+   - L'option "Remember Me" est disponible pour faciliter l'accès lors des sessions ultérieures.
+
+3. Mot de Passe Oublié (Forgot Password) :
+   - Les utilisateurs ont la possibilité de demander un changement de mot de passe s'ils l'oublient.
+
+4. Profil Utilisateur :
+   - Les utilisateurs ont un espace personnel où ils peuvent afficher et modifier leurs données.
+   - La modification de la photo de profil est également possible depuis cette section.
+
+5. Gestion des Salons :
+   - Les salons sont classés en deux types : publics et privés.
+   - Les salons privés sont destinés aux conversations entre deux utilisateurs et n'ont pas accès au menu des options.
+   - Les salons publics peuvent être créés par un utilisateur ayant le rôle de créateur.
+
+6. Rôles Utilisateurs :
+   - Trois rôles distincts sont disponibles : Membre, Modérateur, et Créateur.
+   - Les Membres peuvent uniquement inviter d'autres utilisateurs.
+   - Les Modérateurs peuvent en plus renommer le salon, changer les rôles et effectuer les actions des membres.
+   - Les Créateurs ont tous les privilèges des modérateurs et peuvent supprimer le salon. Il n'y a qu'un créateur, et ce rôle est fixe.
+
+7. Invitations :
+   - Les invitations sont envoyées dans le salon public.
+   - Facilite la création de conversations privées.
+
+8. Emoji :
+   - Les utilisateurs peuvent utiliser des emoji pour enrichir leurs conversations.
+
+9. Vérification d'Email (SMTP) :
+   - Un mécanisme de vérification d'email est mis en place via le protocole SMTP.
+   - Garantit la validité des adresses email des utilisateurs.
+
+Conclusion
+
+L'application de chat offre une expérience complète en fournissant des fonctionnalités avancées tout en assurant la sécurité et la facilité d'utilisation pour les utilisateurs. Les salons publics et privés, la gestion des rôles, les options de profil, et d'autres caractéristiques font de notre application un outil robuste pour la communication en ligne. Nous avons également intégré des mécanismes de sécurité tels que la vérification d'email pour renforcer la fiabilité du service.
