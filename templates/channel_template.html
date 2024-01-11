@@ -164,7 +164,7 @@
                 //displaying the message
                 var userHtml = `<div class="user_image_frame"><img src="${message.user.photo_de_profil}" alt="${message.user.username}"></div>`;
                 var messageHtml = `
-                <div class="channel_messages_class">
+                <div class="channel_messages_class ${"{{request.user.username}}" === message.user.username?"messages_left":"messages_right"}">
                     ${userHtml}  
                     <div class="message_datetime" style="display: inline-flex;max-height: 4px;">
                         ${new Date(message.sent_at).toLocaleString('fr-FR', options)} 
