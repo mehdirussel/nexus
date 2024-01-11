@@ -38,7 +38,7 @@
   color: #27005D;
   max-height: 600px;
   height: 600px;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 #messages-container::-webkit-scrollbar {
