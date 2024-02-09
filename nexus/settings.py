@@ -21,7 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 't77ile9muo6^4&cfw%$$!bzb3q9xr+*y)h-xnkuxi0v_k^4=f4'
+# GENERATE IT YOURSELF
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -158,10 +159,5 @@ MESSAGE_TAGS = {
 }
 
 DEFAULT_FROM_EMAIL = 'Nexus App <nexus@nexus.ensisa>'
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.brevo.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'yahiael1001@gmail.com'
-EMAIL_HOST_PASSWORD = 'Aqx37y4VMCcr9tJW'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
