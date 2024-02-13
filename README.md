@@ -8,4 +8,4 @@
     └── README.md
 
 A discord-like school project, using Django
-Live demo on https://nexus-app.alwaysdata.net/
+<br>Live demo on https://nexus-app.alwaysdata.net/
